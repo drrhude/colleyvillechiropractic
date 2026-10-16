@@ -101,16 +101,16 @@ counters.forEach(c => cio.observe(c));
 
 
 /* Rotating "Care for ___" word */
-const words=["families","athletes","kids","expecting moms","grandparents","weekend warriors","everyone"];
+const words=["Families","Athletes","Kids","Expecting Moms","Grandparents","Weekend Warriors","Everyone"];
 const rot=document.querySelector(".rot-word");
 if(rot){
   let wi=0;
-  const showLine=()=>{ if(words[wi]==="everyone") rot.classList.add("show"); else rot.classList.remove("show"); };
+  const showLine=()=>{ if(words[wi]==="Everyone") rot.classList.add("show"); else rot.classList.remove("show"); };
   if(!reduce) setInterval(()=>{
     rot.classList.remove("in"); rot.classList.add("out");
     setTimeout(()=>{ wi=(wi+1)%words.length; rot.textContent=words[wi]; rot.classList.remove("out"); rot.classList.add("in"); showLine(); },430);
   },2200);
-  else rot.textContent="everyone";
+  else rot.textContent="Everyone";
 }
 /* Stagger tiles, icons and audience chips */
 document.querySelectorAll(".choices .choice").forEach((c,i)=>{
@@ -150,4 +150,16 @@ document.querySelectorAll(".faq details").forEach(d=>{
       body.addEventListener("transitionend",()=>{body.style.height="";},{once:true});
     }
   });
+});
+
+/* Services dropdown: click/tap to toggle, hover on desktop, Esc and outside click close */
+document.querySelectorAll(".has-menu").forEach(m=>{
+  const btn=m.querySelector("button");
+  const set=o=>{m.classList.toggle("open",o);btn.setAttribute("aria-expanded",o);};
+  const desk=matchMedia("(min-width:981px) and (hover:hover)");
+  btn.addEventListener("click",e=>{e.stopPropagation();set(desk.matches?true:!m.classList.contains("open"));});
+  let t; m.addEventListener("mouseenter",()=>{if(desk.matches){clearTimeout(t);set(true);}});
+  m.addEventListener("mouseleave",()=>{if(desk.matches){t=setTimeout(()=>set(false),180);}});
+  document.addEventListener("click",e=>{if(!m.contains(e.target))set(false);});
+  document.addEventListener("keydown",e=>{if(e.key==="Escape"){set(false);btn.focus();}});
 });

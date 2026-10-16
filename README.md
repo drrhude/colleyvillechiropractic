@@ -1,4 +1,4 @@
-# Colleyville Chiropractic | CVC Spine & Sport
+# Colleyville Chiropractic | CVC Spine
 
 Static site for www.colleyvillechiropractic.com. Booking runs through Jane; online programs and member login run through RESET (resethybridrecovery.com) and GoHighLevel.
 
@@ -28,7 +28,25 @@ The domain still points to Squarespace. Do not switch DNS until every page below
 | /account/login | redirect to member portal |
 
 ## Editing pages
-Page content lives in `src/*.html`. Shared header, footer and styles are in `tools/build.py` and `assets/`. After editing, run `python3 tools/build.py` and commit the output.
+- Treatment pages (15): edit `tools/content.py`
+- FAQ page: edit `tools/faqs.py`
+- Home, Our Approach, Team, Pricing, Contact, Affiliate, 404: edit `src/*.html`
+- Header, footer, schema, sitemap.xml and llms.txt: `tools/build.py`
+- Styles and animation: `assets/site.css`, `assets/site.js`
+
+After any edit run `python3 tools/build.py` and commit the output. Headings are converted to Title Case automatically.
+
+## New pages (no redirect needed, they didn't exist before)
+/treatments/ (services hub), /our-approach/, /cupping-therapy/, /myofascial-release/, /red-light-therapy/,
+/electrical-stimulation/, /therapeutic-ultrasound/, /pediatric-chiropractic/, /prenatal-chiropractic/,
+/sports-chiropractic/, /senior-chiropractic/
+
+## SEO / AEO
+- Schema.org graph on every page: Chiropractor (clinic), WebSite, WebPage or MedicalWebPage, BreadcrumbList
+- Treatment pages: MedicalTherapy or MedicalProcedure, FAQPage, reviewed by Dr. Rudy with a review date
+- Answer-first "What is ...?" definitions on every treatment page
+- robots.txt welcomes Google, Bing and AI assistants; llms.txt summarizes the clinic for AI search
+- sitemap.xml regenerates with lastmod on every build
 
 ## Hosting
 Recommended: Cloudflare Pages connected to this repo, so `_redirects` gives true 301s.
