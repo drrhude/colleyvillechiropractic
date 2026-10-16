@@ -2,8 +2,8 @@
 
 | File | What it is |
 | --- | --- |
-| logo-cream.svg | Cream CC monogram for the dark header and footer |
-| logo-olive.svg | Olive CC monogram for light backgrounds |
+| logo-cream.png, cc-mark-cream.png | Added from the checkin repo |
+| logo-olive.png, cc-mark-olive.png | Added (olive mark is the favicon) |
 | hero.mp4 | Hero video, 10-20 seconds, muted, under ~10MB |
 | hero-poster.jpg | Still frame from the hero video |
 | team-rudy.jpg, team-payton.jpg, team-arwen.jpg | Team portraits (4:5) |

@@ -13,6 +13,7 @@
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://www.colleyvillechiropractic.com/">
 <meta name="theme-color" content="#1F2A23">
+<link rel="icon" href="assets/cc-mark-olive.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,300;0,6..72,400;0,6..72,500;1,6..72,400&family=Hanken+Grotesk:wght@400;500;600&display=swap" rel="stylesheet">
@@ -95,7 +96,8 @@ header.site .bar{display:flex;align-items:center;justify-content:space-between;g
 header.site.solid{background:rgba(31,42,35,.94);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);box-shadow:0 1px 0 rgba(255,255,255,.06)}
 .home-page header.site:not(.solid){background:transparent}
 .brand{display:flex;align-items:center;gap:12px;text-decoration:none;color:#fff}
-.brand img{height:42px;width:auto}
+.brand .cc{height:44px;width:auto}
+.foot-logo{width:150px;height:auto}
 .brand .mark{width:40px;height:40px;border-radius:50%;border:1px solid rgba(255,255,255,.5);display:grid;place-items:center;font:500 17px/1 var(--serif)}
 .brand .name{font:400 19px/1.1 var(--serif)}
 .brand .name small{display:block;font:500 11px/1.4 var(--sans);opacity:.75;letter-spacing:.04em}
@@ -316,8 +318,7 @@ footer a:hover{color:#fff}
 <header class="site" id="top">
   <div class="wrap bar">
     <a class="brand" href="/" aria-label="Colleyville Chiropractic home">
-      <!-- Swap for the cream CC monogram: <img src="assets/logo-cream.svg" alt=""> -->
-      <span class="mark" aria-hidden="true">CC</span>
+      <img class="cc" src="assets/cc-mark-cream.png" alt="" width="34" height="44">
       <span class="name">Colleyville Chiropractic<small>CVC Spine &amp; Sport</small></span>
     </a>
     <nav class="main" id="nav" aria-label="Main">
@@ -591,7 +592,7 @@ footer a:hover{color:#fff}
   <div class="wrap">
     <div class="foot">
       <div>
-        <a class="brand" href="/" aria-label="Colleyville Chiropractic home"><span class="mark" aria-hidden="true">CC</span><span class="name">Colleyville Chiropractic<small>CVC Spine &amp; Sport</small></span></a>
+        <a href="/" aria-label="Colleyville Chiropractic home"><img class="foot-logo" src="assets/logo-cream.png" alt="Colleyville Chiropractic" width="150" height="141"></a>
         <p style="margin-top:18px;max-width:34ch">1001 Glade Rd, Suite 120<br>Colleyville, TX 76034</p>
       </div>
       <div><h4>Services</h4><ul><li><a href="/services">Chiropractic</a></li><li><a href="/shockwavetherapy">Shockwave</a></li><li><a href="/neuropath">NeuroPath</a></li><li><a href="/functionalrehab">Functional rehab</a></li><li><a href="/massagetherapy">Massage</a></li><li><a href="/guthealth">Gut health</a></li></ul></div>
