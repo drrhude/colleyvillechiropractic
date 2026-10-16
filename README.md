@@ -9,23 +9,26 @@ The domain still points to Squarespace. Do not switch DNS until every page below
 | Current URL | New site |
 | --- | --- |
 | / | index.html (built) |
-| /services | Chiropractic page (to build) |
-| /shockwavetherapy | to build |
-| /neuropath | to build |
-| /functionalrehab | to build |
-| /massagetherapy | to build |
-| /guthealth | to build |
-| /team | to build |
-| /pricing | to build |
-| /faqs | to build |
-| /contact | to build |
-| /affiliate | to build |
+| /services | Chiropractic page (built) |
+| /shockwavetherapy | built |
+| /neuropath | built |
+| /functionalrehab | built |
+| /massagetherapy | built |
+| /guthealth | built |
+| /team | built |
+| /pricing | built |
+| /faqs | built |
+| /contact | built |
+| /affiliate | built |
 | /shop | redirect to RESET programs |
 | /npmc | redirect to RESET neck |
 | /spmc-1 | redirect to RESET shoulder |
 | /gpmc | redirect to RESET golf |
 | /pfmc | redirect to RESET programs (no pelvic floor program yet) |
 | /account/login | redirect to member portal |
+
+## Editing pages
+Page content lives in `src/*.html`. Shared header, footer and styles are in `tools/build.py` and `assets/`. After editing, run `python3 tools/build.py` and commit the output.
 
 ## Hosting
 Recommended: Cloudflare Pages connected to this repo, so `_redirects` gives true 301s.
