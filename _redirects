@@ -1,0 +1,10 @@
+# True 301 redirects (Cloudflare Pages / Netlify). GitHub Pages ignores this file
+# and uses the matching index.html stub in each folder instead.
+/shop            https://resethybridrecovery.com/#programs  301
+/shop/*          https://resethybridrecovery.com/#programs  301
+/npmc            https://resethybridrecovery.com/neck/      301
+/spmc-1          https://resethybridrecovery.com/shoulder/  301
+/gpmc            https://resethybridrecovery.com/golf/      301
+/pfmc            https://resethybridrecovery.com/#programs  301
+/account/login   https://resethybridrecovery.com/           301
+/account/*       https://resethybridrecovery.com/           301
