@@ -1,18 +1,93 @@
-<!--meta {"path":"affiliate","nav":"","title":"Affiliate Partners | Colleyville Chiropractic","desc":"Partner with Colleyville Chiropractic. Apply to our affiliate program.","trail":[["Home",""],["Affiliate","affiliate/"]]} -->
+<!--meta {"path": "affiliate", "nav": "", "title": "Partner With Us | Colleyville Chiropractic | CVC Spine", "desc": "Gyms, coaches, schools, employers and local businesses: partner with Colleyville Chiropractic on workshops, team care and employee wellness.", "trail": [["Home", ""], ["Partner With Us", "affiliate/"]]} -->
 <section class="page-hero">
   <div class="wrap">
     <a class="crumb" href="{{root}}">Home</a>
-    <h1><span class="line"><span>Partner with us</span></span></h1>
-    <p class="lede">Gyms, coaches, trainers and local businesses: if your people are dealing with pain or injuries, let's work together.</p>
+    <h1><span class="line"><span>Partner</span></span> <span class="line"><span>With Us</span></span></h1>
+    <p class="lede">Gyms, coaches, schools, employers and local businesses: if your people deal with pain, injuries or stiffness, let's take care of them together.</p>
+    <div class="actions"><a class="btn btn-primary" href="#apply">Apply to Partner</a><a class="btn btn-ghost" href="tel:+18174207696">Call (817) 420-7696</a></div>
   </div>
 </section>
 
 <section>
   <div class="wrap">
-    <div class="form-slot reveal">
-      <!-- Paste the affiliate form embed (GHL) here -->
-      <h3>Affiliate application</h3>
-      <p style="margin-top:10px">Form coming soon. In the meantime, call or text (817) 420-7696.</p>
+    <div class="intro reveal">
+      <h2>Who We Partner With</h2>
+      <p>We've cared for Colleyville for 25 years. Our best partnerships are with people who already look after their community.</p>
     </div>
+    <div class="cards four">
+      <div class="card reveal"><span class="kicker">Fitness</span><h3>Gyms + Coaches</h3><p>CrossFit boxes, studios, run clubs and personal trainers.</p></div>
+      <div class="card reveal"><span class="kicker">Sports</span><h3>Teams + Schools</h3><p>Youth clubs, school teams, dance studios and cheer gyms.</p></div>
+      <div class="card reveal"><span class="kicker">Workplace</span><h3>Employers</h3><p>Offices and crews who sit, lift or drive all day.</p></div>
+      <div class="card reveal"><span class="kicker">Healthcare</span><h3>Providers</h3><p>Physicians, physical therapists, massage therapists and dietitians.</p></div>
+    </div>
+  </div>
+</section>
+
+<section class="tint">
+  <div class="wrap">
+    <div class="intro reveal">
+      <h2>Ways to Work Together</h2>
+      <p>Pick one or a few. We'll shape it around your people.</p>
+    </div>
+    <div class="cards">
+      <div class="card reveal"><h3>Workshops</h3><p>Free on-site or in-clinic talks on back pain, injury prevention, mobility and recovery.</p></div>
+      <div class="card reveal"><h3>Injury Screens</h3><p>Movement and injury screens for your athletes, members or staff.</p></div>
+      <div class="card reveal"><h3>Employee Wellness</h3><p>Ergonomics, desk-worker mobility and group membership options for your team.</p></div>
+      <div class="card reveal"><h3>Co-Care</h3><p>Two-way communication with providers, so shared patients get coordinated care.</p></div>
+      <div class="card reveal"><h3>Community Events</h3><p>Race-day recovery tents, team events and joint promotions.</p></div>
+      <div class="card reveal"><h3>Member Perks</h3><p>A welcome offer for your community, like our $47 new patient special.</p></div>
+    </div>
+  </div>
+</section>
+
+<section id="apply">
+  <div class="wrap split" style="align-items:start">
+    <div class="reveal">
+      <h2>Apply to Partner</h2>
+      <p>Tell us a little about you and your community. We'll reach out within two business days to set up a quick call.</p>
+      <ol class="next-steps">
+        <li><b>Apply</b><span>Takes about two minutes.</span></li>
+        <li><b>Quick call</b><span>We learn about your people and goals.</span></li>
+        <li><b>Plan it</b><span>We pick the right partnership and get it on the calendar.</span></li>
+      </ol>
+      <p class="note">Please don't include any health or medical information in this form.</p>
+    </div>
+    <form class="pform reveal" id="affiliate-form" novalidate>
+      <div class="row2">
+        <label>Full name<input name="name" autocomplete="name" required></label>
+        <label>Organization<input name="organization" autocomplete="organization" required></label>
+      </div>
+      <div class="row2">
+        <label>Email<input name="email" type="email" autocomplete="email" required></label>
+        <label>Phone<input name="phone" type="tel" autocomplete="tel" required></label>
+      </div>
+      <label>Type of organization
+        <select name="type" required>
+          <option value="">Choose one</option>
+          <option>Gym or fitness studio</option><option>Coach or personal trainer</option><option>Sports team or club</option>
+          <option>School or dance studio</option><option>Employer or business</option><option>Healthcare provider</option><option>Other</option>
+        </select>
+      </label>
+      <fieldset>
+        <legend>What interests you?</legend>
+        <div class="chips">
+          <label><input type="checkbox" name="interests" value="Workshops"><span>Workshops</span></label>
+          <label><input type="checkbox" name="interests" value="Injury screens"><span>Injury screens</span></label>
+          <label><input type="checkbox" name="interests" value="Employee wellness"><span>Employee wellness</span></label>
+          <label><input type="checkbox" name="interests" value="Co-care"><span>Co-care</span></label>
+          <label><input type="checkbox" name="interests" value="Community events"><span>Community events</span></label>
+          <label><input type="checkbox" name="interests" value="Member perks"><span>Member perks</span></label>
+        </div>
+      </fieldset>
+      <div class="row2">
+        <label>Website or social<input name="website" placeholder="Optional"></label>
+        <label>About how many people?<select name="size"><option value="">Choose one</option><option>Under 25</option><option>25 to 100</option><option>100 to 500</option><option>500+</option></select></label>
+      </div>
+      <label>Anything else we should know?<textarea name="message" rows="4" placeholder="Optional"></textarea></label>
+      <label class="hp" aria-hidden="true">Leave this empty<input name="company_url" tabindex="-1" autocomplete="off"></label>
+      <label class="consent"><input type="checkbox" name="consent" required><span>It's okay to contact me by phone, text or email about a partnership.</span></label>
+      <button class="btn btn-olive" type="submit">Send Application</button>
+      <p class="form-msg" role="status" aria-live="polite"></p>
+    </form>
   </div>
 </section>

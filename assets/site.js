@@ -1,6 +1,5 @@
-/* Jane deep links. New patients (chiro and shockwave) = treatment 80,
-   existing shockwave = 85. Fill the rest with each treatment's booking URL;
-   empty ones fall back to the main booking page. */
+/* Jane booking links. New patients (chiro + shockwave) = treatment 80,
+   existing shockwave = 85. Every other treatment goes to the main booking page. */
 const JANE = {
   base: "https://colleyvillechiropractic.janeapp.com/",
   newPatient: "https://colleyvillechiropractic.janeapp.com/#/discipline/1/treatment/80",
@@ -8,8 +7,11 @@ const JANE = {
   shockwave: "https://colleyvillechiropractic.janeapp.com/#/discipline/1/treatment/80",
   shockwaveExisting: "https://colleyvillechiropractic.janeapp.com/#/discipline/1/treatment/85",
   special: "https://colleyvillechiropractic.janeapp.com/#/discipline/1/treatment/80",
-  existing: "", neuropath: "", rehab: "", massage: "", gut: ""
+  existing: "", neuropath: "", rehab: "", massage: "", gut: "", recovery: ""  /* empty = main booking page */
 };
+
+/* Affiliate form: paste the GHL inbound webhook URL here (Automation > Workflow > Inbound Webhook trigger). */
+const AFFILIATE_WEBHOOK = "";
 document.querySelectorAll("[data-jane]").forEach(a=>{
   const url = JANE[a.dataset.jane] || JANE.base;
   a.href = url; a.target = "_blank"; a.rel = "noopener";
@@ -163,3 +165,34 @@ document.querySelectorAll(".has-menu").forEach(m=>{
   document.addEventListener("click",e=>{if(!m.contains(e.target))set(false);});
   document.addEventListener("keydown",e=>{if(e.key==="Escape"){set(false);btn.focus();}});
 });
+
+/* Partner form: validate, send to GHL webhook, show confirmation */
+const pform = document.getElementById("affiliate-form");
+if (pform) {
+  const msg = pform.querySelector(".form-msg");
+  pform.addEventListener("input", e => e.target.classList.remove("bad"));
+  pform.addEventListener("submit", async e => {
+    e.preventDefault();
+    let firstBad = null;
+    pform.querySelectorAll("[required]").forEach(f => {
+      const bad = f.type === "checkbox" ? !f.checked : !f.value.trim() || (f.type === "email" && !/^\S+@\S+\.\S+$/.test(f.value));
+      f.classList.toggle("bad", bad); if (bad && !firstBad) firstBad = f;
+    });
+    if (firstBad) { msg.className = "form-msg err"; msg.textContent = "Please fill in the highlighted fields."; firstBad.focus(); return; }
+    if (pform.company_url.value) return; /* spam trap */
+    const fd = new FormData(pform);
+    fd.set("interests", fd.getAll("interests").join(", "));
+    fd.delete("company_url"); fd.set("source", "Website partner form"); fd.set("page", location.href);
+    const btn = pform.querySelector("button"); btn.disabled = true; btn.textContent = "Sending...";
+    try {
+      if (!AFFILIATE_WEBHOOK) throw new Error("no webhook");
+      await fetch(AFFILIATE_WEBHOOK, { method: "POST", mode: "no-cors", body: new URLSearchParams(fd) });
+      pform.classList.add("done");
+      pform.innerHTML = '<svg class="done-mark" viewBox="0 0 72 72" fill="none" stroke="#4A5040" stroke-width="2.5" aria-hidden="true"><circle cx="36" cy="36" r="34"/><path d="M23 37l9 9 17-19"/></svg><h3>Thanks, we got it.</h3><p style="color:var(--muted);max-width:36ch">We\'ll reach out within two business days. Questions sooner? Call or text (817) 420-7696.</p>';
+    } catch (err) {
+      btn.disabled = false; btn.textContent = "Send Application";
+      msg.className = "form-msg err";
+      msg.innerHTML = 'Something went wrong sending your application. Please call or text <a href="tel:+18174207696">(817) 420-7696</a>.';
+    }
+  });
+}

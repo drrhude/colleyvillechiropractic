@@ -166,7 +166,7 @@ def footer(r):
         <p style="margin-top:12px">Mon + Wed 9 to 6 · Tue 2 to 6<br>Thu by appointment · Sat 9 to 12</p>
       </div>
       <div><h4>Treatments</h4><ul class="cols">{t}</ul></div>
-      <div><h4>Who We Care For</h4><ul>{p}</ul><h4 style="margin-top:28px">Clinic</h4><ul><li><a href="{r}our-approach/">Our Approach</a></li><li><a href="{r}team/">Team</a></li><li><a href="{r}pricing/">Pricing + Insurance</a></li><li><a href="{r}faqs/">FAQs</a></li><li><a href="{r}contact/">Contact</a></li><li><a href="{r}affiliate/">Affiliate Form</a></li></ul></div>
+      <div><h4>Who We Care For</h4><ul>{p}</ul><h4 style="margin-top:28px">Clinic</h4><ul><li><a href="{r}our-approach/">Our Approach</a></li><li><a href="{r}team/">Team</a></li><li><a href="{r}pricing/">Pricing + Insurance</a></li><li><a href="{r}faqs/">FAQs</a></li><li><a href="{r}contact/">Contact</a></li><li><a href="{r}affiliate/">Partner With Us</a></li></ul></div>
       <div><h4>Connect</h4><ul><li><a href="tel:+18174207696">Call (817) 420-7696</a></li><li><a href="sms:+18174207696">Text Us</a></li><li><a href="https://resethybridrecovery.com/" target="_blank" rel="noopener">RESET Online Programs</a></li><li><a href="#" data-portal>Member Login</a></li></ul></div>
     </div>
     <div class="legal"><span>© 2026 {NAME}</span><span>Se habla español · In-network with BCBS of Texas</span></div>
