@@ -33,7 +33,11 @@ CLINIC = {
   "potentialAction": {"@type": "ReserveAction", "target": JANE, "name": "Book an appointment"},
 }
 DOCTOR = {"@type": "Person", "@id": SITE + "team/#dr-rudy", "name": "Dr. Jon \"Rudy\" Urrutia", "honorificSuffix": "DC",
-          "jobTitle": "Chiropractor", "worksFor": {"@id": SITE + "#clinic"}, "knowsLanguage": ["en", "es"], "url": SITE + "team/"}
+          "jobTitle": "Chiropractor", "worksFor": {"@id": SITE + "#clinic"}, "knowsLanguage": ["en", "es"], "url": SITE + "team/",
+          "alumniOf": {"@type": "CollegeOrUniversity", "name": "Parker University", "address": {"@type": "PostalAddress", "addressLocality": "Dallas", "addressRegion": "TX"}},
+          "hasCredential": [{"@type": "EducationalOccupationalCredential", "credentialCategory": "degree", "name": "Doctor of Chiropractic", "recognizedBy": {"@type": "CollegeOrUniversity", "name": "Parker University"}},
+                            {"@type": "EducationalOccupationalCredential", "credentialCategory": "certification", "name": "Advanced Activator Certification"}],
+          "description": "U.S. Coast Guard veteran (10 years active duty). Doctor of Chiropractic, Parker University, 2022. Advanced Activator certified."}
 
 # ---------------------------------------------------------------- title case
 SMALL = {"a", "an", "the", "and", "but", "or", "for", "nor", "on", "at", "to", "by", "in", "of", "as", "vs", "with", "from", "per", "via"}
@@ -402,9 +406,9 @@ svc_lines = "\n".join(f"- [{s['name']}]({SITE}{s['path']}/): {s['what']}" for s 
 - Phone (call or text): (817) 420-7696
 - Hours: Monday and Wednesday 9am to 6pm, Tuesday 2pm to 6pm, Thursday by appointment, Friday closed, Saturday 9am to 12pm, Sunday closed
 - Booking: {JANE}
-- Chiropractor: Dr. Jon "Rudy" Urrutia, DC, U.S. Coast Guard veteran
+- Chiropractor: Dr. Jon "Rudy" Urrutia, DC. Bachelor's degree and Doctor of Chiropractic from Parker University (2022), Advanced Activator certified, 10 years active duty U.S. Coast Guard
 - New patient special: $47. New patient exam $120. Follow-up visit $60 ($45 member).
-- Memberships: CVC Care $49/year, CVC Wellness $89/month, CVC Complete $169/month
+- Memberships: CVC Care $49/year, CVC Wellness $89/month, CVC Complete $169/month. Wellness and Complete include 2 recovery therapies a month (cupping, vibration plate or myofascial release).
 - Online programs: https://resethybridrecovery.com/
 
 ## Services

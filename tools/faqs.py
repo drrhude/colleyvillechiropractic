@@ -6,6 +6,7 @@ FAQ_GROUPS = [
  ("Do I need a referral to see a chiropractor?", "No. You can book directly with us online or by calling or texting (817) 420-7696."),
  ("How much is the first visit?", "New patients can start with our $47 new patient special. A standard new patient exam is $120. If you're using Blue Cross Blue Shield of Texas, we'll verify your benefits first."),
  ("What should I wear?", "Comfortable clothes you can move in, like athletic wear. We'll have you do some simple movements during the exam."),
+ ("Who is the chiropractor?", "Dr. Jon \"Rudy\" Urrutia, DC. He earned both his bachelor's degree and his Doctor of Chiropractic from Parker University, graduating in 2022, and he is Advanced Activator certified. Before that, he served 10 years on active duty in the U.S. Coast Guard. He sees patients in English and Spanish."),
  ("How long have you been in Colleyville?", "This clinic has cared for Colleyville families for 25 years. Dr. Jon \"Rudy\" Urrutia, DC, has owned and led the practice since 2023."),
  ("Who do you treat?", "Everyone. Kids and teens, expecting moms, athletes, weekend warriors, busy professionals and seniors. We adjust our techniques to the person on the table."),
  ("Do you speak Spanish?", "Yes. Se habla español. Call or text (817) 420-7696 to book in Spanish."),
@@ -22,7 +23,7 @@ FAQ_GROUPS = [
 ("Memberships", [
  ("How do CVC memberships work?", "Memberships lower the cost of regular care. CVC Care is $49 a year ($99 for your household) and unlocks $45 visits. CVC Wellness is $89 a month and includes 2 visits a month plus 2 recovery therapies. CVC Complete is $169 a month and includes 4 visits a month plus 2 recovery therapies."),
  ("What does each membership visit include?", "Each visit includes an adjustment plus one therapy, such as the roller table, ultrasound or e-stim."),
- ("What are recovery therapies?", "Red light therapy, cupping or myofascial release, about 15 minutes each. CVC Wellness and CVC Complete include 2 a month. Otherwise they're $40, or $22 for members."),
+ ("What are recovery therapies?", "Cupping, vibration plate or myofascial release, about 15 minutes each. CVC Wellness and CVC Complete include 2 a month. Otherwise they're $40, or $22 for members."),
  ("Do members get a discount on shockwave?", "Yes. CVC Wellness and CVC Complete members pay $79 per shockwave session, with no package required."),
  ("Can I add family members?", "Yes. CVC Care covers your household for $99 a year. Additional household members can join CVC Wellness for $79 a month or CVC Complete for $149 a month."),
 ]),

@@ -18,10 +18,14 @@ P_SHOCK = ("Shockwave Therapy", [
     ("10-pack (chronic cases)", "$99 per session, $990"),
     ("Member session", "$79"),
 ])
-P_RECOVERY = ("Recovery Therapy (15 Minutes)", [
+P_RECOVERY = ("Recovery Therapy: Cupping, Vibration Plate or Myofascial Release", [
     ("Single session", "$40"),
     ("Member session", "$22"),
     ("CVC Wellness and CVC Complete", "2 per month included"),
+])
+P_REDLIGHT = ("Red Light Therapy (15 Minutes)", [
+    ("Single session", "$40"),
+    ("Member session", "$22"),
 ])
 P_ANCILLARY = ("Pricing", [
     ("With any chiropractic visit", "Included"),
@@ -55,7 +59,7 @@ dict(
  facts=[("$47", "New patient special"), ("$45", "Member visit"), ("BCBS", "In-network"), ("Sat", "9am to 12pm")],
  what="A chiropractic adjustment is a quick, controlled force applied to a joint that isn't moving well, most often in the spine. It can reduce pain and muscle guarding and restore motion. The pop you may hear is gas releasing from the joint, not bones cracking.",
  more=["An adjustment opens a window: less pain, more motion. What it doesn't do on its own is make you stronger. That's why most of our plans pair adjustments with targeted exercise, so you're not back on the table every few weeks with the same problem.",
-       "Prefer no popping? We use three techniques and pick the one you're comfortable with: Diversified (classic hands-on), Thompson (a drop table that uses less force) and Activator (a gentle handheld instrument)."],
+       "Prefer no popping? We use three techniques and pick the one you're comfortable with: Diversified (classic hands-on), Thompson (a drop table that uses less force) and Activator (a gentle handheld instrument). Dr. Rudy is Advanced Activator certified."],
  photo="Dr. Rudy adjusting a patient",
  helps=["Lower back pain", "Neck pain", "Sciatica", "Headaches", "Mid-back stiffness", "Joint pain", "Whiplash", "Posture-related pain", "Sports injuries", "Pregnancy-related pain", "Scoliosis", "Nerve irritation"],
  expect=["You may feel looser and more mobile right away", "Mild soreness for 6 to 24 hours is normal, like after a workout", "Results usually build over a series of visits, not just one"],
@@ -211,7 +215,7 @@ dict(
  evidence="Cupping may offer short-term relief of muscle pain and tightness. The quality of evidence is limited and mixed, so we use it as a comfort and recovery adjunct alongside active care.",
  pricing=P_RECOVERY,
  faqs=[("Do cupping marks hurt?", "No. The marks are discoloration from increased blood flow, not injury. They don't hurt and fade within a few days to a week."),
-       ("Is cupping included in memberships?", "Yes. CVC Wellness and CVC Complete include 2 recovery therapies a month, which can be cupping, red light or myofascial release.")],
+       ("Is cupping included in memberships?", "Yes. CVC Wellness and CVC Complete include 2 recovery therapies a month: cupping, vibration plate or myofascial release.")],
  related=["myofascial-release", "massagetherapy", "red-light-therapy"],
  schema="MedicalTherapy",
 ),
@@ -241,7 +245,7 @@ dict(
 dict(
  path="red-light-therapy", group="treatments", name="Red Light Therapy", short="Red Light Therapy",
  title="Red Light Therapy in Colleyville, TX | CVC Spine",
- desc="Red light therapy (photobiomodulation) in Colleyville for joint pain, tendon injuries and recovery. Painless, no UV, no downtime. Included with CVC memberships.",
+ desc="Red light therapy (photobiomodulation) in Colleyville for joint pain, tendon injuries and recovery. Painless, no UV and no downtime.",
  h1=("Red Light Therapy",),
  lede="Red and near-infrared light that supports tissue repair and recovery. Painless, no UV, no downtime.",
  book=("recovery", "Book Red Light"), alt=None,
@@ -254,9 +258,9 @@ dict(
  after=["Stay hydrated", "Pair it with your exercises and manual care", "Follow the session frequency we recommend"],
  caution=["Don't look directly into the light", "Tell us if you take photosensitizing medication or have a light-sensitive condition"],
  evidence="Photobiomodulation has growing support from randomized trials and meta-analyses for several musculoskeletal pains, especially knee osteoarthritis and tendon problems. Evidence is mixed for chronic low back pain, where exercise remains first-line.",
- pricing=P_RECOVERY,
+ pricing=P_REDLIGHT,
  faqs=[("Is red light therapy safe?", "Yes for most people. It uses no UV and doesn't damage skin. Don't look directly into the light, and tell us if you take a photosensitizing medication."),
-       ("How often should I do red light therapy?", "Effects build with consistent sessions. We'll recommend a frequency based on your goal, and members get 2 recovery sessions a month on Wellness and Complete.")],
+       ("How often should I do red light therapy?", "Effects build with consistent sessions. We'll recommend a frequency based on your goal, and we pair it with your active care.")],
  related=["shockwavetherapy", "neuropath", "cupping-therapy"],
  schema="MedicalTherapy",
 ),
