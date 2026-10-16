@@ -10,13 +10,24 @@ ROOT = pathlib.Path(__file__).resolve().parent.parent
 SITE = "https://www.colleyvillechiropractic.com/"
 JANE = "https://colleyvillechiropractic.janeapp.com/"
 NAME = "Colleyville Chiropractic | CVC Spine"
+# Analytics: paste your GA4 Measurement ID (looks like G-XXXXXXXXXX). Leave blank to load no tracking.
+GA4_ID = ""
+HOME_FAQ = ["What happens at my first visit?", "How much is the first visit?", "Do you take insurance?",
+            "Do I need a referral to see a chiropractor?", "Do adjustments hurt?", "How many visits will I need?"]
+# Real photos for treatment pages (assets/img/<name>-<width>.webp). Pages without one get a branded panel instead.
+PHOTOS = {
+  "services": ("adjustment-side-posture", [700, 1200], 1542/1200, "Dr. Rudy giving a side-posture chiropractic adjustment"),
+  "sports-chiropractic": ("adjustment-lumbar", [540, 900], 1094/900, "Dr. Rudy treating a patient's low back"),
+  "functionalrehab": ("vibration-plates", [600, 1000], 1.333, "Vibration plates at Colleyville Chiropractic"),
+  "senior-chiropractic": ("dr-rudy-spine", [540, 900], 1353/900, "Dr. Rudy holding a spine model"),
+}
 TODAY = datetime.date.today().isoformat()
 ARROW = '<svg viewBox="0 0 16 16" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M3 8h10M9 4l4 4-4 4"/></svg>'
 
 CLINIC = {
   "@type": "Chiropractor", "@id": SITE + "#clinic",
   "name": NAME, "alternateName": ["Colleyville Chiropractic", "CVC Spine"],
-  "url": SITE, "logo": SITE + "assets/logo-olive.png", "image": SITE + "assets/og.jpg",
+  "url": SITE, "logo": SITE + "assets/logo-olive.png", "image": [SITE + "assets/og.jpg", SITE + "assets/img/front-desk-1000.webp", SITE + "assets/img/reception-1000.webp"],
   "telephone": "+1-817-420-7696", "faxNumber": "+1-866-499-4260",
   "priceRange": "$$", "currenciesAccepted": "USD",
   "paymentAccepted": "Cash, Credit Card, Debit Card, HSA, FSA, CareCredit, Cherry",
@@ -52,6 +63,8 @@ def _tc_word(w, first):
     return pre + "-".join(p[:1].upper() + p[1:] for p in parts) + post
 
 def title_case_heading(inner):
+    # Capitalize a small word when it ends the heading ("What Brings You In?")
+    inner = re.sub(r"\b(in|on|to|for|of|at|by|up)(\?|\.|!)?$", lambda m: m.group(1).capitalize() + (m.group(2) or ""), inner)
     out, first = [], True
     for chunk in re.split(r"(<[^>]+>)", inner):
         if chunk.startswith("<"):
@@ -86,6 +99,9 @@ def head(m, r):
     if m.get("trail"): graph.append(crumbs_ld(m["trail"]))
     graph += m.get("ld", [])
     ld = '<script type="application/ld+json">' + json.dumps({"@context": "https://schema.org", "@graph": graph}, ensure_ascii=False) + "</script>"
+    preload = f'<link rel="preload" as="image" href="{r}{m["preload"]}" fetchpriority="high">\n' if m.get("preload") else ""
+    ga = (f'<script async src="https://www.googletagmanager.com/gtag/js?id={GA4_ID}"></script>\n'
+          f"<script>window.dataLayer=window.dataLayer||[];function gtag(){{dataLayer.push(arguments)}}gtag('js',new Date());gtag('config','{GA4_ID}');</script>\n") if GA4_ID else ""
     robots = '<meta name="robots" content="noindex">\n' if m.get("noindex") else '<meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1">\n'
     return f"""<!doctype html>
 <html lang="en">
@@ -105,14 +121,14 @@ def head(m, r):
 <meta name="twitter:card" content="summary_large_image">
 <meta name="geo.region" content="US-TX">
 <meta name="geo.placename" content="Colleyville">
-<meta name="theme-color" content="#22281F">
+<meta name="theme-color" content="#1D2A30">
 <link rel="icon" href="{r}assets/cc-mark-olive.png">
 <link rel="apple-touch-icon" href="{r}assets/apple-touch-icon.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,300;0,6..72,400;0,6..72,500;1,6..72,400&family=Hanken+Grotesk:wght@400;500;600&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="{r}assets/site.css">
-{ld}
+{preload}{ga}{ld}
 </head>"""
 
 def mega(r):
@@ -133,8 +149,7 @@ def header(r, active):
         return f'<a href="{href}"{cur}>{label}</a>'
     return f"""<body class="home-page">
 <a class="skip" href="#main">Skip to content</a>
-<!-- Confirm the $47 offer is live before launch -->
-<div class="offer">New patients: first visit and exam for $47. <a href="{JANE}" data-jane="special">Claim It</a></div>
+<div class="offer">New patients: your first visit is $47. <a href="{JANE}" data-jane="special">Book Online</a></div>
 <header class="site" id="top">
   <div class="wrap bar">
     <a class="brand" href="{r}" aria-label="Colleyville Chiropractic home">
@@ -149,7 +164,8 @@ def header(r, active):
       {a(r + "team/", "Team", "team")}
       {a(r + "faqs/", "FAQs", "faqs")}
     </nav>
-    <a class="btn btn-primary header-cta" href="{JANE}" data-jane="newPatient">Book a Visit</a>
+    <a class="header-phone" href="tel:+18174207696"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M5 4h4l2 5-2.5 1.5a11 11 0 0 0 5 5L15 13l5 2v4a2 2 0 0 1-2 2A16 16 0 0 1 3 6a2 2 0 0 1 2-2"/></svg>(817) 420-7696</a>
+    <a class="btn btn-primary header-cta" href="{JANE}" data-jane="special">Book Your $47 Visit</a>
     <button class="menu-btn" aria-label="Open menu" aria-expanded="false" aria-controls="nav"><span></span><span></span><span></span></button>
   </div>
 </header>"""
@@ -169,12 +185,13 @@ def footer(r):
       <div><h4>Who We Care For</h4><ul>{p}</ul><h4 style="margin-top:28px">Clinic</h4><ul><li><a href="{r}our-approach/">Our Approach</a></li><li><a href="{r}team/">Team</a></li><li><a href="{r}pricing/">Pricing + Insurance</a></li><li><a href="{r}faqs/">FAQs</a></li><li><a href="{r}contact/">Contact</a></li><li><a href="{r}affiliate/">Partner With Us</a></li></ul></div>
       <div><h4>Connect</h4><ul><li><a href="tel:+18174207696">Call (817) 420-7696</a></li><li><a href="sms:+18174207696">Text Us</a></li><li><a href="https://resethybridrecovery.com/" target="_blank" rel="noopener">RESET Online Programs</a></li><li><a href="#" data-portal>Member Login</a></li></ul></div>
     </div>
-    <div class="legal"><span>© 2026 {NAME}</span><span>Se habla español · In-network with BCBS of Texas</span></div>
+    <p class="disclaimer">The information on this site is for education and is not a diagnosis or a substitute for an exam. Results vary from person to person. If you have a medical emergency, call 911.</p>
+    <div class="legal"><span>© 2026 {NAME}</span><span><a href="{r}privacy/">Privacy</a> · <a href="{r}faqs/#insurance-payment">Cancellation Policy</a> · Se habla español · In-network with BCBS of Texas</span></div>
   </div>
 </footer>
 <div class="dock" aria-label="Quick actions">
   <a class="btn btn-ghost" href="tel:+18174207696">Call</a>
-  <a class="btn btn-primary" href="{JANE}" data-jane="newPatient">Book a Visit</a>
+  <a class="btn btn-primary" href="{JANE}" data-jane="special">Book $47 Visit</a>
 </div>
 <!-- GHL text widget goes here (paste the existing chat widget script) -->
 <script src="{r}assets/site.js"></script>
@@ -184,6 +201,9 @@ def footer(r):
 
 def write(m, body):
     r = m["root"] if "root" in m else ("" if m["path"] == "" else "../" * (m["path"].count("/") + 1))
+    if "{{home_faq}}" in body:
+        qa = {q: a for _, items in FAQ_GROUPS for q, a in items}
+        body = body.replace("{{home_faq}}", faq_html([(q, qa[q]) for q in HOME_FAQ]))
     body = body.replace("{{root}}", r).replace("{{jane}}", JANE)
     page = head(m, r) + "\n" + header(r, m.get("nav", "")) + '\n<main id="main">\n' + body + "\n</main>\n" + footer(r)
     page = apply_title_case(page)
@@ -228,6 +248,23 @@ def cta(s):
   </div></div>
 </section>'''
 
+def visual(s):
+    if s["path"] in PHOTOS:
+        n, ws, ratio, alt = PHOTOS[s["path"]]
+        return (f'<div class="photo reveal"><img src="{{{{root}}}}assets/img/{n}-{ws[0]}.webp" srcset="{{{{root}}}}assets/img/{n}-{ws[0]}.webp {ws[0]}w, {{{{root}}}}assets/img/{n}-{ws[1]}.webp {ws[1]}w" '
+                f'sizes="(max-width:860px) 92vw, 44vw" width="{ws[1]}" height="{round(ws[1]*ratio)}" alt="{esc(alt)}" loading="lazy" decoding="async"></div>')
+    items = s["facts"][:3] if s["facts"] else []
+    rows = "".join(f"<li><b>{esc(a)}</b><span>{esc(b)}</span></li>" for a, b in items)
+    helps = "".join(f"<li>{esc(h)}</li>" for h in s["helps"][:4])
+    return f'''<aside class="panel-card reveal" aria-label="{esc(s["name"])} at a glance">
+      <img class="mark" src="{{{{root}}}}assets/cc-mark-cream.png" alt="" width="68" height="88">
+      <p class="kicker">At a Glance</p>
+      <p class="pc-title">{esc(s["name"])}</p>
+      {f'<ul class="pc-facts">{rows}</ul>' if rows else ''}
+      <p class="kicker" style="margin-top:22px">Often Used For</p>
+      <ul class="pc-helps">{helps}</ul>
+    </aside>'''
+
 def service_page(s):
     lines = " ".join(f'<span class="line"><span>{esc(l)}</span></span>' for l in s["h1"])
     k, label = s["book"]
@@ -260,7 +297,7 @@ def service_page(s):
       <div style="margin-top:22px">{more}</div>
       {byline()}
     </div>
-    <div class="photo reveal"><span class="ph">Photo needed: {esc(s["photo"])}</span></div>
+    {visual(s)}
   </div>
 </section>
 

@@ -129,7 +129,15 @@ document.querySelector(`.hours tr[data-day="${today}"]`)?.classList.add("today")
 
 /* Hide video if it fails to load so the gradient poster shows */
 const vid = document.querySelector(".hero video");
-if (vid) { vid.addEventListener("error", () => vid.remove(), true); if (reduce) { vid.removeAttribute("autoplay"); vid.pause(); } }
+if (vid) {
+  vid.addEventListener("error", () => vid.remove(), true);
+  const saveData = navigator.connection && navigator.connection.saveData;
+  if (reduce || saveData) { vid.removeAttribute("autoplay"); vid.pause(); vid.preload = "none"; }
+  else if ("IntersectionObserver" in window) {
+    /* Pause the hero video when it's scrolled out of view to save battery and CPU */
+    new IntersectionObserver(([e]) => { e.isIntersecting ? vid.play().catch(() => {}) : vid.pause(); }).observe(vid);
+  }
+}
 
 const dock = document.querySelector(".dock");
 addEventListener("scroll", onScroll, { passive: true });
@@ -188,6 +196,7 @@ if (pform) {
       if (!AFFILIATE_WEBHOOK) throw new Error("no webhook");
       await fetch(AFFILIATE_WEBHOOK, { method: "POST", mode: "no-cors", body: new URLSearchParams(fd) });
       pform.classList.add("done");
+      if (typeof track === "function") track("generate_lead", { form: "partner" });
       pform.innerHTML = '<svg class="done-mark" viewBox="0 0 72 72" fill="none" stroke="#4A5040" stroke-width="2.5" aria-hidden="true"><circle cx="36" cy="36" r="34"/><path d="M23 37l9 9 17-19"/></svg><h3>Thanks, we got it.</h3><p style="color:var(--muted);max-width:36ch">We\'ll reach out within two business days. Questions sooner? Call or text (817) 420-7696.</p>';
     } catch (err) {
       btn.disabled = false; btn.textContent = "Send Application";
@@ -196,3 +205,25 @@ if (pform) {
     }
   });
 }
+
+/* ---------- Conversion tracking ----------
+   Sends events to Google Analytics 4 when GA4_ID is set in tools/build.py.
+   Events also land in window.dataLayer, so Google Tag Manager can use them later.
+   book_click: any Jane booking button (label = which button)
+   call_click / text_click: tap-to-call and tap-to-text links
+   generate_lead: partner form submitted successfully (fired from the form code) */
+window.dataLayer = window.dataLayer || [];
+function track(name, params = {}) {
+  params.page_path = location.pathname;
+  if (typeof window.gtag === "function") window.gtag("event", name, params);
+  else window.dataLayer.push(Object.assign({ event: name }, params));
+}
+document.addEventListener("click", e => {
+  const a = e.target.closest("a");
+  if (!a) return;
+  const href = a.getAttribute("href") || "";
+  const label = (a.textContent || "").trim().slice(0, 60);
+  if (a.dataset.jane !== undefined || href.includes("janeapp.com")) track("book_click", { link_text: label, booking_type: a.dataset.jane || "main", link_url: a.href });
+  else if (href.startsWith("tel:")) track("call_click", { link_text: label });
+  else if (href.startsWith("sms:")) track("text_click", { link_text: label });
+}, { capture: true });

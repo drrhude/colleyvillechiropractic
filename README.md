@@ -59,3 +59,13 @@ containing `www.colleyvillechiropractic.com` only on launch day.
 3. Fill the Jane treatment links in index.html (`const JANE`).
 4. Point DNS, submit sitemap.xml in Google Search Console.
 5. Keep Squarespace active 30 days as a rollback.
+
+## Analytics + conversion tracking
+- Paste your GA4 Measurement ID into `GA4_ID` at the top of `tools/build.py`, then run `python3 tools/build.py`. Blank = no tracking loads.
+- Events sent automatically (assets/site.js): `book_click` (every Jane button, with `booking_type`), `call_click`, `text_click`, `generate_lead` (partner form).
+- In GA4, mark `book_click`, `call_click` and `generate_lead` as key events.
+- Actual appointment completions happen inside Jane, so they can't be tracked from this site. Use Jane's reports for booked appointments.
+
+## Photos
+- Web-ready images live in `assets/img/` as `<name>-<width>.webp`. Treatment-page photos are mapped in `PHOTOS` in `tools/build.py`; pages without one show a branded "At a Glance" panel.
+- Hero video: `assets/hero.mp4` (trimmed, captions cropped, no audio) with `assets/hero-poster.webp`.
