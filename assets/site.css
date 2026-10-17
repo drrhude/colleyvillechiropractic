@@ -732,3 +732,6 @@ section.cta-band{padding-bottom:clamp(24px,3vw,36px)}
 #visit{padding-top:clamp(24px,3vw,40px)}
 .who .label{display:flex}
 .who-box .audience li{background:#fff;border:1px solid rgba(74,80,64,.14)}
+/* language switch */
+nav.main .lang-switch{border:1px solid rgba(255,255,255,.35);border-radius:999px;padding:5px 12px;font-size:13px;letter-spacing:.02em}
+nav.main .lang-switch:hover{border-color:#fff;background:rgba(255,255,255,.08)}

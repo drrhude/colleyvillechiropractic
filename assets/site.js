@@ -103,16 +103,18 @@ counters.forEach(c => cio.observe(c));
 
 
 /* Rotating "Care for ___" word */
-const words=["Families","Athletes","Kids","Expecting Moms","Grandparents","Weekend Warriors","Everyone"];
 const rot=document.querySelector(".rot-word");
+/* Words can be set per page with data-words="A|B|C" on the .rot-word span (the last word is the "everyone" word) */
+const words=(rot&&rot.dataset.words)?rot.dataset.words.split("|"):["Families","Athletes","Kids","Expecting Moms","Grandparents","Weekend Warriors","Everyone"];
+const lastWord=words[words.length-1];
 if(rot){
   let wi=0;
-  const showLine=()=>{ if(words[wi]==="Everyone") rot.classList.add("show"); else rot.classList.remove("show"); };
+  const showLine=()=>{ if(words[wi]===lastWord) rot.classList.add("show"); else rot.classList.remove("show"); };
   if(!reduce) setInterval(()=>{
     rot.classList.remove("in"); rot.classList.add("out");
     setTimeout(()=>{ wi=(wi+1)%words.length; rot.textContent=words[wi]; rot.classList.remove("out"); rot.classList.add("in"); showLine(); },430);
   },2200);
-  else rot.textContent="Everyone";
+  else rot.textContent=lastWord;
 }
 /* Stagger tiles, icons and audience chips */
 document.querySelectorAll(".choices .choice").forEach((c,i)=>{

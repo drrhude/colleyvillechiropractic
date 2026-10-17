@@ -51,7 +51,7 @@ CLINIC = {
   "name": NAME, "alternateName": ["Colleyville Chiropractic", "CVC Spine"],
   "url": SITE, "logo": SITE + "assets/logo-olive.png", "image": [SITE + "assets/og.jpg", SITE + "assets/img/front-desk-1000.webp", SITE + "assets/img/reception-1000.webp"],
   "telephone": "+1-817-420-7696", "faxNumber": "+1-866-499-4260",
-  "priceRange": "$$", "currenciesAccepted": "USD",
+  "foundingDate": "1999", "priceRange": "$$", "currenciesAccepted": "USD",
   "paymentAccepted": "Cash, Credit Card, Debit Card, HSA, FSA, CareCredit, Cherry",
   "address": {"@type": "PostalAddress", "streetAddress": "1001 Glade Rd, Suite 120", "addressLocality": "Colleyville", "addressRegion": "TX", "postalCode": "76034", "addressCountry": "US"},
   "hasMap": "https://www.google.com/maps/search/?api=1&query=1001+Glade+Rd+Suite+120+Colleyville+TX+76034",
@@ -72,6 +72,12 @@ DOCTOR = {"@type": "Person", "@id": SITE + "team/#dr-rudy", "name": "Dr. Jon \"R
           "hasCredential": [{"@type": "EducationalOccupationalCredential", "credentialCategory": "degree", "name": "Doctor of Chiropractic", "recognizedBy": {"@type": "CollegeOrUniversity", "name": "Parker University"}},
                             {"@type": "EducationalOccupationalCredential", "credentialCategory": "certification", "name": "Advanced Activator Certification"}],
           "description": "U.S. Coast Guard veteran (10 years active duty). Doctor of Chiropractic, Parker University, 2022. Advanced Activator certified."}
+
+# ---------------------------------------------------------------- languages
+# English page path -> Spanish page path. Used for hreflang tags and the language switch.
+ES_PAIRS = {"": "es", "pricing": "es/precios", "contact": "es/contacto"}
+EN_OF = {v: k for k, v in ES_PAIRS.items()}
+def lang_of(m): return m.get("lang", "en")
 
 # ---------------------------------------------------------------- title case
 SMALL = {"a", "an", "the", "and", "but", "or", "for", "nor", "on", "at", "to", "by", "in", "of", "as", "vs", "with", "from", "per", "via"}
@@ -110,10 +116,11 @@ def crumbs_ld(trail):
 
 def head(m, r):
     url = SITE + (m["path"] + "/" if m["path"] else "")
-    graph = [CLINIC, {"@type": "WebSite", "@id": SITE + "#site", "url": SITE, "name": NAME, "inLanguage": "en-US", "publisher": {"@id": SITE + "#clinic"}}]
+    lang = lang_of(m); locale = "es-US" if lang == "es" else "en-US"
+    graph = [CLINIC, {"@type": "WebSite", "@id": SITE + "#site", "url": SITE, "name": NAME, "inLanguage": ["en-US", "es-US"], "publisher": {"@id": SITE + "#clinic"}}]
     page_type = m.get("page_type", "WebPage")
     webpage = {"@type": page_type, "@id": url + "#page", "url": url, "name": m["title"], "description": m["desc"],
-               "isPartOf": {"@id": SITE + "#site"}, "about": {"@id": SITE + "#clinic"}, "inLanguage": "en-US", "dateModified": TODAY}
+               "isPartOf": {"@id": SITE + "#site"}, "about": {"@id": SITE + "#clinic"}, "inLanguage": locale, "dateModified": TODAY}
     if m.get("doctor"): graph.append(DOCTOR)
     if m.get("reviewed"):
         webpage["reviewedBy"] = {"@id": SITE + "team/#dr-rudy"}; webpage["lastReviewed"] = m["reviewed"]
@@ -125,22 +132,30 @@ def head(m, r):
     preload = f'<link rel="preload" as="image" href="{r}{m["preload"]}" fetchpriority="high">\n' if m.get("preload") else ""
     ga = (f'<script async src="https://www.googletagmanager.com/gtag/js?id={GA4_ID}"></script>\n'
           f"<script>window.dataLayer=window.dataLayer||[];function gtag(){{dataLayer.push(arguments)}}gtag('js',new Date());gtag('config','{GA4_ID}');</script>\n") if GA4_ID else ""
+    en_path = EN_OF.get(m["path"], m["path"]) if lang == "es" else m["path"]
+    es_path = ES_PAIRS.get(en_path)
+    alts = ""
+    if es_path is not None:
+        u = lambda p: SITE + (p + "/" if p else "")
+        alts = (f'<link rel="alternate" hreflang="en" href="{u(en_path)}">\n<link rel="alternate" hreflang="es" href="{u(es_path)}">\n'
+                f'<link rel="alternate" hreflang="x-default" href="{u(en_path)}">\n')
     robots = '<meta name="robots" content="noindex">\n' if m.get("noindex") else '<meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1">\n'
     return f"""<!doctype html>
-<html lang="en">
+<html lang="{lang}">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>{html.escape(m['title'])}</title>
 <meta name="description" content="{html.escape(m['desc'])}">
 {robots}<link rel="canonical" href="{url}">
+{alts}
 <meta property="og:site_name" content="{NAME}">
 <meta property="og:title" content="{html.escape(m['title'])}">
 <meta property="og:description" content="{html.escape(m['desc'])}">
 <meta property="og:type" content="website">
 <meta property="og:url" content="{url}">
 <meta property="og:image" content="{SITE}assets/og.jpg">
-<meta property="og:locale" content="en_US">
+<meta property="og:locale" content="{'es_US' if lang == 'es' else 'en_US'}">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="geo.region" content="US-TX">
 <meta name="geo.placename" content="Colleyville">
@@ -166,10 +181,35 @@ def mega(r):
         </div>
       </div>"""
 
-def header(r, active):
+def header(r, active, m=None):
+    m = m or {"path": ""}
     def a(href, label, key):
         cur = ' aria-current="page"' if key == active else ""
         return f'<a href="{href}"{cur}>{label}</a>'
+    if lang_of(m) == "es":
+        en = EN_OF.get(m["path"], "")
+        return f"""<body class="home-page" lang="es">
+<a class="skip" href="#main">Saltar al contenido</a>
+<div class="offer">Pacientes nuevos: su primera visita cuesta $47. <a href="{JANE}" data-jane="special">Reserve en línea</a></div>
+<header class="site" id="top">
+  <div class="wrap bar">
+    <a class="brand" href="{r}es/" aria-label="Colleyville Chiropractic, inicio">
+      <img class="cc" src="{r}assets/cc-mark-cream.png" alt="" width="34" height="44">
+      <span class="name">Colleyville Chiropractic<small>CVC Spine</small></span>
+    </a>
+    <nav class="main" id="nav" aria-label="Principal">
+      {a(r + "es/", "Inicio", "home")}
+      <a href="{r}treatments/" hreflang="en">Servicios <small style="opacity:.6">(en inglés)</small></a>
+      {a(r + "es/precios/", "Precios + Seguro", "pricing")}
+      {a(r + "es/contacto/", "Contacto", "contact")}
+      <a class="lang-switch" href="{r}{en + '/' if en else ''}" hreflang="en" lang="en">English</a>
+    </nav>
+    <a class="header-phone" href="tel:+18174207696"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M5 4h4l2 5-2.5 1.5a11 11 0 0 0 5 5L15 13l5 2v4a2 2 0 0 1-2 2A16 16 0 0 1 3 6a2 2 0 0 1 2-2"/></svg>(817) 420-7696</a>
+    <a class="btn btn-primary header-cta" href="{JANE}" data-jane="special">Reserve su visita de $47</a>
+    <button class="menu-btn" aria-label="Abrir menú" aria-expanded="false" aria-controls="nav"><span></span><span></span><span></span></button>
+  </div>
+</header>"""
+    es = ES_PAIRS.get(m["path"], "es")
     return f"""<body class="home-page">
 <a class="skip" href="#main">Skip to content</a>
 <div class="offer">New patients: your first visit is $47. <a href="{JANE}" data-jane="special">Book Online</a></div>
@@ -186,12 +226,39 @@ def header(r, active):
       {a(r + "pricing/", "Pricing + Insurance", "pricing")}
       {a(r + "team/", "Team", "team")}
       {a(r + "faqs/", "FAQs", "faqs")}
+      <a class="lang-switch" href="{r}{es}/" hreflang="es" lang="es">Español</a>
     </nav>
     <a class="header-phone" href="tel:+18174207696"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M5 4h4l2 5-2.5 1.5a11 11 0 0 0 5 5L15 13l5 2v4a2 2 0 0 1-2 2A16 16 0 0 1 3 6a2 2 0 0 1 2-2"/></svg>(817) 420-7696</a>
     <a class="btn btn-primary header-cta" href="{JANE}" data-jane="special">Book Your $47 Visit</a>
     <button class="menu-btn" aria-label="Open menu" aria-expanded="false" aria-controls="nav"><span></span><span></span><span></span></button>
   </div>
 </header>"""
+
+def footer_es(r):
+    return f"""<footer>
+  <div class="wrap">
+    <div class="foot">
+      <div>
+        <a href="{r}es/" aria-label="Colleyville Chiropractic, inicio"><img class="foot-logo" src="{r}assets/logo-cream.png" alt="Logotipo de Colleyville Chiropractic" width="150" height="141"></a>
+        <p style="margin-top:18px;max-width:34ch">1001 Glade Rd, Suite 120<br>Colleyville, TX 76034<br><a href="tel:+18174207696">(817) 420-7696</a></p>
+        <p style="margin-top:12px">Lun + Mié 9 a 6 · Mar 2 a 6<br>Jue con cita · Sáb 9 a 12</p>
+      </div>
+      <div><h4>En español</h4><ul><li><a href="{r}es/">Inicio</a></li><li><a href="{r}es/precios/">Precios + Seguro</a></li><li><a href="{r}es/contacto/">Contacto</a></li></ul></div>
+      <div><h4>En inglés</h4><ul><li><a href="{r}treatments/" hreflang="en">Servicios</a></li><li><a href="{r}team/" hreflang="en">Equipo</a></li><li><a href="{r}faqs/" hreflang="en">Preguntas frecuentes</a></li><li><a href="{r}our-approach/" hreflang="en">Nuestro enfoque</a></li></ul></div>
+      <div><h4>Contacto</h4><ul><li><a href="tel:+18174207696">Llame al (817) 420-7696</a></li><li><a href="sms:+18174207696">Envíenos un mensaje</a></li><li><a href="https://resethybridrecovery.com/es/" target="_blank" rel="noopener">Programas RESET en línea</a></li></ul>{social_html()}</div>
+    </div>
+    <p class="disclaimer">La información de este sitio es educativa y no es un diagnóstico ni sustituye un examen. Los resultados varían de persona a persona. Si tiene una emergencia médica, llame al 911.</p>
+    <div class="legal"><span>© 2026 {NAME}</span><span><a href="{r}privacy/" hreflang="en">Privacidad</a> · Hablamos español · Dentro de la red de BCBS de Texas</span></div>
+  </div>
+</footer>
+<div class="dock" aria-label="Acciones rápidas">
+  <a class="btn btn-ghost" href="tel:+18174207696">Llamar</a>
+  <a class="btn btn-primary" href="{JANE}" data-jane="special">Visita de $47</a>
+</div>
+<script src="{r}assets/site.js"></script>
+</body>
+</html>
+"""
 
 def footer(r):
     t = "".join(f'<li><a href="{r}{s["path"]}/">{s["short"]}</a></li>' for s in SERVICES if s["group"] == "treatments")
@@ -228,8 +295,10 @@ def write(m, body):
         qa = {q: a for _, items in FAQ_GROUPS for q, a in items}
         body = body.replace("{{home_faq}}", faq_html([(q, qa[q]) for q in HOME_FAQ]))
     body = body.replace("{{root}}", r).replace("{{jane}}", JANE)
-    page = head(m, r) + "\n" + header(r, m.get("nav", "")) + '\n<main id="main">\n' + body + "\n</main>\n" + footer(r)
-    page = apply_title_case(page)
+    es = lang_of(m) == "es"
+    page = head(m, r) + "\n" + header(r, m.get("nav", ""), m) + '\n<main id="main">\n' + body + "\n</main>\n" + (footer_es(r) if es else footer(r))
+    if not es:  # Spanish headings use sentence case
+        page = apply_title_case(page)
     out = ROOT / (m["file"] if "file" in m else (m["path"] + "/index.html" if m["path"] else "index.html"))
     out.parent.mkdir(parents=True, exist_ok=True)
     out.write_text(page)
@@ -461,7 +530,7 @@ urls = "\n".join(f"  <url><loc>{SITE}{p}</loc><lastmod>{TODAY}</lastmod></url>" 
 svc_lines = "\n".join(f"- [{s['name']}]({SITE}{s['path']}/): {s['what']}" for s in SERVICES)
 (ROOT / "llms.txt").write_text(f"""# {NAME}
 
-> Chiropractic clinic in Colleyville, Texas, serving the community for 25 years. Chiropractic care, shockwave therapy, the NeuroPath neuropathy program, functional rehab, massage and recovery therapies for kids, athletes, expecting moms, seniors and everyone in between. In-network with Blue Cross Blue Shield of Texas. Bilingual (English and Spanish).
+> Chiropractic clinic in Colleyville, Texas, serving the community since 1999. Chiropractic care, shockwave therapy, the NeuroPath neuropathy program, functional rehab, massage and recovery therapies for kids, athletes, expecting moms, seniors and everyone in between. In-network with Blue Cross Blue Shield of Texas. Bilingual (English and Spanish).
 
 - Address: 1001 Glade Rd, Suite 120, Colleyville, TX 76034
 - Phone (call or text): (817) 420-7696
@@ -481,5 +550,6 @@ svc_lines = "\n".join(f"- [{s['name']}]({SITE}{s['path']}/): {s['what']}" for s 
 - [FAQs]({SITE}faqs/)
 - [Team]({SITE}team/)
 - [Contact]({SITE}contact/)
+- [Inicio en español]({SITE}es/): Spanish homepage. [Precios]({SITE}es/precios/), [Contacto]({SITE}es/contacto/)
 """)
 print(len(built), "pages built")

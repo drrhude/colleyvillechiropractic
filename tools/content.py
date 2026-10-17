@@ -54,7 +54,7 @@ dict(
  title="Chiropractic Care in Colleyville, TX | CVC Spine",
  desc="Chiropractic care in Colleyville for back pain, neck pain, sciatica and headaches. Gentle and hands-on techniques plus rehab. In-network with BCBS Texas.",
  h1=("Chiropractic Care", "in Colleyville"),
- lede="Hands-on adjustments for back pain, neck pain, sciatica and headaches, paired with movement work so the relief lasts. Families across Colleyville have trusted this clinic for 25 years.",
+ lede="Hands-on adjustments for back pain, neck pain, sciatica and headaches, paired with movement work so the relief lasts. Families across Colleyville have trusted this clinic since 1999.",
  book=("newPatient", "Book a New Patient Visit"), alt=("existing", "Existing Patient Booking"),
  facts=[("$47", "New patient special"), ("$45", "Member visit"), ("BCBS", "In-network"), ("Sat", "9am to 12pm")],
  what="A chiropractic adjustment is a quick, controlled force applied to a joint that isn't moving well, most often in the spine. It can reduce pain and muscle guarding and restore motion. The pop you may hear is gas releasing from the joint, not bones cracking.",

@@ -7,7 +7,7 @@ FAQ_GROUPS = [
  ("How much is the first visit?", "New patients can start with our $47 new patient special. A standard new patient exam is $120. If you're using Blue Cross Blue Shield of Texas, we'll verify your benefits first."),
  ("What should I wear?", "Comfortable clothes you can move in, like athletic wear. We'll have you do some simple movements during the exam."),
  ("Who is the chiropractor?", "Dr. Jon \"Rudy\" Urrutia, DC. He earned both his bachelor's degree and his Doctor of Chiropractic from Parker University, graduating in 2022, and he is Advanced Activator certified. Before that, he served 10 years on active duty in the U.S. Coast Guard. He sees patients in English and Spanish."),
- ("How long have you been in Colleyville?", "This clinic has cared for Colleyville families for 25 years. Dr. Jon \"Rudy\" Urrutia, DC, has owned and led the practice since 2023."),
+ ("How long have you been in Colleyville?", "This clinic has cared for Colleyville families since 1999. Dr. Jon \"Rudy\" Urrutia, DC, has owned and led the practice since 2023."),
  ("Who do you treat?", "Everyone. Kids and teens, expecting moms, athletes, weekend warriors, busy professionals and seniors. We adjust our techniques to the person on the table."),
  ("Do you speak Spanish?", "Yes. Se habla español. Call or text (817) 420-7696 to book in Spanish."),
  ("What are your hours?", "Monday and Wednesday 9am to 6pm, Tuesday 2pm to 6pm, Thursday by appointment, Saturday 9am to 12pm. Closed Friday and Sunday."),
