@@ -48,7 +48,6 @@ p{margin:0}
 header.site{position:sticky;top:0;z-index:50;transition:background .4s var(--ease),box-shadow .4s}
 header.site .bar{display:flex;align-items:center;justify-content:space-between;gap:20px;height:76px}
 header.site.solid{background:rgba(31,37,29,.94);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);box-shadow:0 1px 0 rgba(255,255,255,.06)}
-.home-page header.site:not(.solid){background:transparent}
 .brand{display:flex;align-items:center;gap:12px;text-decoration:none;color:#fff}
 .brand .cc{height:44px;width:auto}
 .foot-logo{width:150px;height:auto}
@@ -80,7 +79,7 @@ nav.main a:hover::after{transform:scaleX(1)}
 .hero{position:relative;min-height:min(92svh,860px);margin-top:-76px;display:flex;align-items:flex-end;color:#fff;overflow:hidden;background:var(--pine)}
 .hero video,.hero .poster{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;animation:drift 22s ease-in-out infinite alternate}
 .hero .poster{background:radial-gradient(120% 90% at 70% 20%,#3A4036 0%,var(--pine) 60%)}
-.hero::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(20,25,19,.55) 0%,rgba(20,25,19,.25) 40%,rgba(20,25,19,.82) 100%)}
+.hero::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(20,25,19,.35) 0%,rgba(20,25,19,.08) 40%,rgba(20,25,19,.62) 100%),linear-gradient(90deg,rgba(20,25,19,.45) 0%,rgba(20,25,19,0) 60%)}
 @keyframes drift{from{transform:scale(1.04)}to{transform:scale(1.12) translate(-1.5%,-1%)}}
 .hero .wrap{position:relative;z-index:2;width:100%;padding-top:140px;padding-bottom:clamp(48px,8vw,96px)}
 .hero h1{font-size:clamp(44px,7.6vw,104px);font-weight:300}
@@ -696,3 +695,40 @@ header.site.solid{background:rgba(31,37,29,.9)}
 section.cta-band{padding-bottom:clamp(24px,3vw,36px)}
 #visit{padding-bottom:clamp(24px,3vw,40px)}
 .trust .bcbs img{height:40px}
+
+/* ---------- round 4: shorter hero, section labels, floating boxes ---------- */
+.hero{min-height:min(68svh,640px)}
+.hero .wrap{padding-top:96px;padding-bottom:clamp(64px,7vw,92px)}
+.hero h1{font-size:clamp(40px,6.2vw,84px)}
+.hero .lede{margin-top:18px}
+.hero .actions{margin-top:24px}
+.offer-card{margin-top:20px}
+.label{display:inline-flex;align-items:center;gap:10px;font:600 12.5px/1 var(--sans);letter-spacing:.16em;text-transform:uppercase;color:var(--olive);margin:0 0 14px}
+.label::before{content:"";width:24px;height:1.5px;background:currentColor;opacity:.7}
+:is(.approach,.dark,.page-hero,.cta-band,.reset) .label{color:var(--sage)}
+.who .label{justify-content:center}
+.float-box{background:#fff;border-radius:28px;padding:clamp(24px,4vw,52px);box-shadow:0 1px 0 rgba(20,23,20,.04),0 40px 70px -50px rgba(31,37,29,.45);position:relative}
+.float-box + .float-box{margin-top:clamp(18px,2.4vw,28px)}
+.tint .float-box,.picker .float-box{background:var(--paper)}
+.float-box .intro{margin-bottom:clamp(22px,3vw,34px)}
+/* trust bar floats up over the hero */
+.reviews{padding-top:0}
+.float-bar{position:relative;z-index:3;margin-top:-52px;background:#fff;border:0;border-radius:22px;padding:clamp(20px,2.6vw,30px) clamp(20px,3vw,40px);box-shadow:0 30px 60px -36px rgba(31,37,29,.55);margin-bottom:clamp(22px,3vw,34px)}
+.reviews .float-box{background:var(--mist)}
+.reviews .float-box blockquote{background:#fff}
+/* picker boxes */
+.who{margin-bottom:0}
+.rotator{font-size:clamp(38px,5.4vw,68px)}
+.who-box .marquee{margin:clamp(26px,3.4vw,38px) calc(-1 * clamp(24px,4vw,52px)) 0;border-bottom:0;padding-bottom:4px}
+.who-box{padding-bottom:clamp(14px,2vw,22px);overflow:hidden}
+/* faq box: title left, questions right */
+.faq-box{display:grid;grid-template-columns:minmax(0,.8fr) minmax(0,1.4fr);gap:clamp(24px,5vw,72px);align-items:start;background:#fff!important}
+.faq-box h2{margin-bottom:14px}
+.faq-box > div:first-child p{color:var(--muted);margin-bottom:22px;max-width:36ch}
+.faq-box .faq summary{padding:18px 0;font-size:clamp(19px,1.8vw,22px)}
+@media (max-width:860px){.faq-box{grid-template-columns:1fr}}
+/* visit box */
+.float-box.visit{display:grid}
+#visit{padding-top:clamp(24px,3vw,40px)}
+.who .label{display:flex}
+.who-box .audience li{background:#fff;border:1px solid rgba(74,80,64,.14)}
