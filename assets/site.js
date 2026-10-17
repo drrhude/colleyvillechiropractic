@@ -227,3 +227,16 @@ document.addEventListener("click", e => {
   else if (href.startsWith("tel:")) track("call_click", { link_text: label });
   else if (href.startsWith("sms:")) track("text_click", { link_text: label });
 }, { capture: true });
+
+/* Reviews: cards take turns lifting with a gold sheen while the section is on screen */
+(() => {
+  const qs = [...document.querySelectorAll(".quotes blockquote")];
+  if (qs.length < 2 || reduce) return;
+  let i = 0, timer = null;
+  const step = () => { qs.forEach(q => q.classList.remove("lit")); qs[i % qs.length].classList.add("lit"); i++; };
+  new IntersectionObserver(([e]) => {
+    if (e.isIntersecting && !timer) { setTimeout(step, 1200); timer = setInterval(step, 3600); }
+    else if (!e.isIntersecting && timer) { clearInterval(timer); timer = null; qs.forEach(q => q.classList.remove("lit")); }
+  }, { threshold: .35 }).observe(qs[0].parentElement);
+  qs.forEach(q => q.addEventListener("mouseenter", () => { qs.forEach(x => x.classList.remove("lit")); q.classList.add("lit"); i = qs.indexOf(q) + 1; }));
+})();

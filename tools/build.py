@@ -14,6 +14,28 @@ NAME = "Colleyville Chiropractic | CVC Spine"
 GA4_ID = ""
 HOME_FAQ = ["What happens at my first visit?", "How much is the first visit?", "Do you take insurance?",
             "Do I need a referral to see a chiropractor?", "Do adjustments hurt?", "How many visits will I need?"]
+# Social profiles: add a URL to show its icon in the footer and in Google's business data (schema sameAs). Blank = hidden.
+SOCIAL = {
+  "Instagram": "https://www.instagram.com/cvcspinetx/",
+  "Instagram (Español)": "https://www.instagram.com/cvc.health/",
+  "Facebook": "",
+  "TikTok": "",
+  "YouTube": "",
+}
+ICONS = {
+  "Instagram": '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none"/></svg>',
+  "Facebook": '<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M13.5 21v-7.5H16l.4-3H13.5V8.6c0-.9.3-1.5 1.5-1.5h1.6V4.4A21 21 0 0 0 14.3 4.3c-2.3 0-3.8 1.4-3.8 3.9v2.3H8v3h2.5V21z"/></svg>',
+  "TikTok": '<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M16.6 3c.3 2.2 1.6 3.6 3.9 3.8v3a7 7 0 0 1-3.9-1.2v6.2a5.8 5.8 0 1 1-5.8-5.8c.3 0 .6 0 .9.1v3.1a2.7 2.7 0 1 0 1.9 2.6V3z"/></svg>',
+  "YouTube": '<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M21.6 7.2a2.5 2.5 0 0 0-1.8-1.8C18.2 5 12 5 12 5s-6.2 0-7.8.4A2.5 2.5 0 0 0 2.4 7.2 26 26 0 0 0 2 12a26 26 0 0 0 .4 4.8 2.5 2.5 0 0 0 1.8 1.8C5.8 19 12 19 12 19s6.2 0 7.8-.4a2.5 2.5 0 0 0 1.8-1.8A26 26 0 0 0 22 12a26 26 0 0 0-.4-4.8zM10 15V9l5.2 3z"/></svg>',
+}
+def social_html():
+    links = []
+    for name, url in SOCIAL.items():
+        if url:
+            links.append(f'<a href="{url}" target="_blank" rel="noopener" aria-label="{name}">{ICONS[name.split(" ")[0]]}</a>')
+    return '<div class="social">' + "".join(links) + "</div>" if links else ""
+HERO_VARIANTS = ["", "hv-olive", "hv-forest", "hv-earth"]
+
 # Real photos for treatment pages (assets/img/<name>-<width>.webp). Pages without one get a branded panel instead.
 PHOTOS = {
   "services": ("adjustment-side-posture", [700, 1200], 1542/1200, "Dr. Rudy giving a side-posture chiropractic adjustment"),
@@ -43,6 +65,7 @@ CLINIC = {
   "employee": {"@id": SITE + "team/#dr-rudy"},
   "potentialAction": {"@type": "ReserveAction", "target": JANE, "name": "Book an appointment"},
 }
+CLINIC["sameAs"] = [u for u in SOCIAL.values() if u]
 DOCTOR = {"@type": "Person", "@id": SITE + "team/#dr-rudy", "name": "Dr. Jon \"Rudy\" Urrutia", "honorificSuffix": "DC",
           "jobTitle": "Chiropractor", "worksFor": {"@id": SITE + "#clinic"}, "knowsLanguage": ["en", "es"], "url": SITE + "team/",
           "alumniOf": {"@type": "CollegeOrUniversity", "name": "Parker University", "address": {"@type": "PostalAddress", "addressLocality": "Dallas", "addressRegion": "TX"}},
@@ -121,7 +144,7 @@ def head(m, r):
 <meta name="twitter:card" content="summary_large_image">
 <meta name="geo.region" content="US-TX">
 <meta name="geo.placename" content="Colleyville">
-<meta name="theme-color" content="#1D2A30">
+<meta name="theme-color" content="#1F251D">
 <link rel="icon" href="{r}assets/cc-mark-olive.png">
 <link rel="apple-touch-icon" href="{r}assets/apple-touch-icon.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -183,7 +206,7 @@ def footer(r):
       </div>
       <div><h4>Treatments</h4><ul class="cols">{t}</ul></div>
       <div><h4>Who We Care For</h4><ul>{p}</ul><h4 style="margin-top:28px">Clinic</h4><ul><li><a href="{r}our-approach/">Our Approach</a></li><li><a href="{r}team/">Team</a></li><li><a href="{r}pricing/">Pricing + Insurance</a></li><li><a href="{r}faqs/">FAQs</a></li><li><a href="{r}contact/">Contact</a></li><li><a href="{r}affiliate/">Partner With Us</a></li></ul></div>
-      <div><h4>Connect</h4><ul><li><a href="tel:+18174207696">Call (817) 420-7696</a></li><li><a href="sms:+18174207696">Text Us</a></li><li><a href="https://resethybridrecovery.com/" target="_blank" rel="noopener">RESET Online Programs</a></li><li><a href="#" data-portal>Member Login</a></li></ul></div>
+      <div><h4>Connect</h4><ul><li><a href="tel:+18174207696">Call (817) 420-7696</a></li><li><a href="sms:+18174207696">Text Us</a></li><li><a href="https://resethybridrecovery.com/" target="_blank" rel="noopener">RESET Online Programs</a></li><li><a href="#" data-portal>Member Login</a></li></ul>{social_html()}</div>
     </div>
     <p class="disclaimer">The information on this site is for education and is not a diagnosis or a substitute for an exam. Results vary from person to person. If you have a medical emergency, call 911.</p>
     <div class="legal"><span>© 2026 {NAME}</span><span><a href="{r}privacy/">Privacy</a> · <a href="{r}faqs/#insurance-payment">Cancellation Policy</a> · Se habla español · In-network with BCBS of Texas</span></div>
@@ -279,7 +302,8 @@ def service_page(s):
         pricing = f'<div class="card reveal">{price_html(s["pricing"])}<p class="note">Members save on most services. <a href="{{{{root}}}}pricing/">See memberships and all pricing</a></p></div>'
     else:
         pricing = f'<div class="card reveal"><h3>Pricing</h3>{s.get("extra","")}<p class="note"><a href="{{{{root}}}}pricing/">See all pricing</a></p></div>'
-    return f'''<section class="page-hero">
+    hv = HERO_VARIANTS[SERVICES.index(s) % len(HERO_VARIANTS)]
+    return f'''<section class="page-hero {hv}">
   <div class="wrap">
     <a class="crumb" href="{{{{root}}}}treatments/">{crumb_label}</a>
     <h1>{lines}</h1>
