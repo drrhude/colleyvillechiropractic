@@ -75,7 +75,7 @@ DOCTOR = {"@type": "Person", "@id": SITE + "team/#dr-rudy", "name": "Dr. Jon \"R
 
 # ---------------------------------------------------------------- languages
 # English page path -> Spanish page path. Used for hreflang tags and the language switch.
-ES_PAIRS = {"": "es", "pricing": "es/precios", "contact": "es/contacto"}
+ES_PAIRS = {"": "es", "pricing": "es/precios", "contact": "es/contacto", "neuropath": "es/neuropatia"}
 EN_OF = {v: k for k, v in ES_PAIRS.items()}
 def lang_of(m): return m.get("lang", "en")
 
@@ -200,6 +200,7 @@ def header(r, active, m=None):
     <nav class="main" id="nav" aria-label="Principal">
       {a(r + "es/", "Inicio", "home")}
       <a href="{r}treatments/" hreflang="en">Servicios <small style="opacity:.6">(en inglés)</small></a>
+      {a(r + "es/neuropatia/", "Neuropatía", "neuropath")}
       {a(r + "es/precios/", "Precios + Seguro", "pricing")}
       {a(r + "es/contacto/", "Contacto", "contact")}
       <a class="lang-switch" href="{r}{en + '/' if en else ''}" hreflang="en" lang="en">English</a>
@@ -243,7 +244,7 @@ def footer_es(r):
         <p style="margin-top:18px;max-width:34ch">1001 Glade Rd, Suite 120<br>Colleyville, TX 76034<br><a href="tel:+18174207696">(817) 420-7696</a></p>
         <p style="margin-top:12px">Lun + Mié 9 a 6 · Mar 2 a 6<br>Jue con cita · Sáb 9 a 12</p>
       </div>
-      <div><h4>En español</h4><ul><li><a href="{r}es/">Inicio</a></li><li><a href="{r}es/precios/">Precios + Seguro</a></li><li><a href="{r}es/contacto/">Contacto</a></li></ul></div>
+      <div><h4>En español</h4><ul><li><a href="{r}es/">Inicio</a></li><li><a href="{r}es/neuropatia/">Neuropatía (NeuroPath)</a></li><li><a href="{r}es/precios/">Precios + Seguro</a></li><li><a href="{r}es/contacto/">Contacto</a></li></ul></div>
       <div><h4>En inglés</h4><ul><li><a href="{r}treatments/" hreflang="en">Servicios</a></li><li><a href="{r}team/" hreflang="en">Equipo</a></li><li><a href="{r}faqs/" hreflang="en">Preguntas frecuentes</a></li><li><a href="{r}our-approach/" hreflang="en">Nuestro enfoque</a></li></ul></div>
       <div><h4>Contacto</h4><ul><li><a href="tel:+18174207696">Llame al (817) 420-7696</a></li><li><a href="sms:+18174207696">Envíenos un mensaje</a></li><li><a href="https://resethybridrecovery.com/es/" target="_blank" rel="noopener">Programas RESET en línea</a></li></ul>{social_html()}</div>
     </div>
@@ -263,6 +264,7 @@ def footer_es(r):
 def footer(r):
     t = "".join(f'<li><a href="{r}{s["path"]}/">{s["short"]}</a></li>' for s in SERVICES if s["group"] == "treatments")
     p = "".join(f'<li><a href="{r}{s["path"]}/">{s["short"]}</a></li>' for s in SERVICES if s["group"] == "people")
+    c = "".join(f'<li><a href="{r}{s["path"]}/">{s["short"]}</a></li>' for s in SERVICES if s["group"] == "conditions")
     return f"""<footer>
   <div class="wrap">
     <div class="foot">
@@ -272,7 +274,7 @@ def footer(r):
         <p style="margin-top:12px">Mon + Wed 9 to 6 · Tue 2 to 6<br>Thu by appointment · Sat 9 to 12</p>
       </div>
       <div><h4>Treatments</h4><ul class="cols">{t}</ul></div>
-      <div><h4>Who We Care For</h4><ul>{p}</ul><h4 style="margin-top:28px">Clinic</h4><ul><li><a href="{r}our-approach/">Our Approach</a></li><li><a href="{r}team/">Team</a></li><li><a href="{r}pricing/">Pricing + Insurance</a></li><li><a href="{r}faqs/">FAQs</a></li><li><a href="{r}contact/">Contact</a></li><li><a href="{r}affiliate/">Partner With Us</a></li></ul></div>
+      <div><h4>Who We Care For</h4><ul>{p}</ul><h4 style="margin-top:28px">Nerve Conditions</h4><ul>{c}</ul><h4 style="margin-top:28px">Clinic</h4><ul><li><a href="{r}our-approach/">Our Approach</a></li><li><a href="{r}team/">Team</a></li><li><a href="{r}pricing/">Pricing + Insurance</a></li><li><a href="{r}faqs/">FAQs</a></li><li><a href="{r}contact/">Contact</a></li><li><a href="{r}affiliate/">Partner With Us</a></li></ul></div>
       <div><h4>Connect</h4><ul><li><a href="tel:+18174207696">Call (817) 420-7696</a></li><li><a href="sms:+18174207696">Text Us</a></li><li><a href="https://resethybridrecovery.com/" target="_blank" rel="noopener">RESET Online Programs</a></li><li><a href="#" data-portal>Member Login</a></li></ul>{social_html()}</div>
     </div>
     <p class="disclaimer">The information on this site is for education and is not a diagnosis or a substitute for an exam. Results vary from person to person. If you have a medical emergency, call 911.</p>
@@ -364,7 +366,7 @@ def service_page(s):
     actions += (f'<a class="btn btn-ghost" href="{{{{jane}}}}" data-jane="{s["alt"][0]}">{s["alt"][1]}</a>' if s.get("alt")
                 else '<a class="btn btn-ghost" href="tel:+18174207696">Call (817) 420-7696</a>')
     facts = ("<ul class=\"facts\">" + "".join(f"<li><b>{a}</b><span>{b}</span></li>" for a, b in s["facts"]) + "</ul>") if s["facts"] else ""
-    crumb_label = "Who We Care For" if s["group"] == "people" else "Services"
+    crumb_label = {"people": "Who We Care For", "conditions": "Conditions"}.get(s["group"], "Services")
     more = "".join(f"<p>{esc(p)}</p>" for p in s["more"])
     pricing = ""
     if s.get("pricing"):
@@ -372,6 +374,26 @@ def service_page(s):
     else:
         pricing = f'<div class="card reveal"><h3>Pricing</h3>{s.get("extra","")}<p class="note"><a href="{{{{root}}}}pricing/">See all pricing</a></p></div>'
     hv = HERO_VARIANTS[SERVICES.index(s) % len(HERO_VARIANTS)]
+    phases = ""
+    if s.get("phases"):
+        ph = "".join(f'<div class="phase"><span class="when">{esc(w)}</span><h3>{esc(h)}</h3><p>{esc(d)}</p></div>' for w, h, d in s["phases"])
+        phases = f'''
+<section class="tint">
+  <div class="wrap">
+    <div class="intro reveal"><h2>How {esc(s["name"])} Works</h2><p>Three phases over 12 months. How fast you move through them depends on your testing, not the calendar.</p></div>
+    <div class="phases reveal">{ph}</div>
+  </div>
+</section>'''
+    conds = ""
+    if s.get("conditions"):
+        conds = f'''
+<section>
+  <div class="wrap">
+    <div class="intro reveal"><h2>Nerve Problems We See Most</h2><p>Different causes, different plans. Start with the one that sounds like you.</p></div>
+    {related_html(s["conditions"])}
+  </div>
+</section>'''
+    helps_h = "Common Symptoms" if s["group"] == "conditions" else "What It Helps With"
     return f'''<section class="page-hero {hv}">
   <div class="wrap">
     <a class="crumb" href="{{{{root}}}}treatments/">{crumb_label}</a>
@@ -393,12 +415,12 @@ def service_page(s):
     {visual(s)}
   </div>
 </section>
-
+{phases}{conds}
 <section class="tint">
   <div class="wrap">
     <div class="intro reveal">
-      <h2>What It Helps With</h2>
-      <p>Your exam tells us whether {esc(s["short"].lower() if s["group"]=="treatments" else "this care")} is the right fit for you.</p>
+      <h2>{helps_h}</h2>
+      <p>Your exam tells us whether {esc((s["short"] if s["short"] == "NeuroPath" else s["short"].lower()) if s["group"]=="treatments" else "this care")} is the right fit for you.</p>
     </div>
     <ul class="tags reveal">{"".join(f"<li>{esc(h)}</li>" for h in s["helps"])}</ul>
   </div>
@@ -442,7 +464,7 @@ def service_page(s):
 {cta(s)}'''
 
 def service_meta(s):
-    group = "Who We Care For" if s["group"] == "people" else "Services"
+    group = {"people": "Who We Care For", "conditions": "Conditions"}.get(s["group"], "Services")
     therapy = {"@type": s["schema"], "name": s["name"], "description": s["what"], "url": SITE + s["path"] + "/",
                "provider": {"@id": SITE + "#clinic"}}
     return {"path": s["path"], "nav": "services", "title": s["title"], "desc": s["desc"], "page_type": "MedicalWebPage",
@@ -465,6 +487,7 @@ def hub_page():
   <div class="wrap">
     <div class="hub-group"><h2 class="reveal">Treatments</h2>{grid("treatments")}</div>
     <div class="hub-group"><h2 class="reveal">Who We Care For</h2>{grid("people")}</div>
+    <div class="hub-group"><h2 class="reveal">Nerve Conditions</h2>{grid("conditions")}</div>
   </div>
 </section>
 <section class="reset" aria-label="RESET online programs">
@@ -550,6 +573,6 @@ svc_lines = "\n".join(f"- [{s['name']}]({SITE}{s['path']}/): {s['what']}" for s 
 - [FAQs]({SITE}faqs/)
 - [Team]({SITE}team/)
 - [Contact]({SITE}contact/)
-- [Inicio en español]({SITE}es/): Spanish homepage. [Precios]({SITE}es/precios/), [Contacto]({SITE}es/contacto/)
+- [Inicio en español]({SITE}es/): Spanish homepage. [Neuropatía / NeuroPath]({SITE}es/neuropatia/), [Precios]({SITE}es/precios/), [Contacto]({SITE}es/contacto/)
 """)
 print(len(built), "pages built")
