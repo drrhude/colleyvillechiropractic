@@ -4,6 +4,7 @@
 Run: python3 tools/build.py"""
 import json, re, pathlib, datetime, html
 from content import SERVICES, SERVICE_BY_PATH, BLURB, REVIEWED
+from content_es import ES, BLURB_ES, REVIEWED_ES
 from faqs import FAQ_GROUPS
 
 ROOT = pathlib.Path(__file__).resolve().parent.parent
@@ -75,7 +76,8 @@ DOCTOR = {"@type": "Person", "@id": SITE + "team/#dr-rudy", "name": "Dr. Jon \"R
 
 # ---------------------------------------------------------------- languages
 # English page path -> Spanish page path. Used for hreflang tags and the language switch.
-ES_PAIRS = {"": "es", "pricing": "es/precios", "contact": "es/contacto", "neuropath": "es/neuropatia"}
+ES_PAIRS = {"": "es", "pricing": "es/precios", "contact": "es/contacto", "treatments": "es/servicios"}
+ES_PAIRS.update({k: v["slug"] for k, v in ES.items()})
 EN_OF = {v: k for k, v in ES_PAIRS.items()}
 def lang_of(m): return m.get("lang", "en")
 
@@ -199,8 +201,7 @@ def header(r, active, m=None):
     </a>
     <nav class="main" id="nav" aria-label="Principal">
       {a(r + "es/", "Inicio", "home")}
-      <a href="{r}treatments/" hreflang="en">Servicios <small style="opacity:.6">(en inglés)</small></a>
-      {a(r + "es/neuropatia/", "Neuropatía", "neuropath")}
+      {a(r + "es/servicios/", "Servicios", "services")}
       {a(r + "es/precios/", "Precios + Seguro", "pricing")}
       {a(r + "es/contacto/", "Contacto", "contact")}
       <a class="lang-switch" href="{r}{en + '/' if en else ''}" hreflang="en" lang="en">English</a>
@@ -244,8 +245,8 @@ def footer_es(r):
         <p style="margin-top:18px;max-width:34ch">1001 Glade Rd, Suite 120<br>Colleyville, TX 76034<br><a href="tel:+18174207696">(817) 420-7696</a></p>
         <p style="margin-top:12px">Lun + Mié 9 a 6 · Mar 2 a 6<br>Jue con cita · Sáb 9 a 12</p>
       </div>
-      <div><h4>En español</h4><ul><li><a href="{r}es/">Inicio</a></li><li><a href="{r}es/neuropatia/">Neuropatía (NeuroPath)</a></li><li><a href="{r}es/precios/">Precios + Seguro</a></li><li><a href="{r}es/contacto/">Contacto</a></li></ul></div>
-      <div><h4>En inglés</h4><ul><li><a href="{r}treatments/" hreflang="en">Servicios</a></li><li><a href="{r}team/" hreflang="en">Equipo</a></li><li><a href="{r}faqs/" hreflang="en">Preguntas frecuentes</a></li><li><a href="{r}our-approach/" hreflang="en">Nuestro enfoque</a></li></ul></div>
+      <div><h4>En español</h4><ul><li><a href="{r}es/">Inicio</a></li><li><a href="{r}es/servicios/">Servicios</a></li><li><a href="{r}es/neuropatia/">Neuropatía (NeuroPath)</a></li><li><a href="{r}es/precios/">Precios + Seguro</a></li><li><a href="{r}es/contacto/">Contacto</a></li></ul></div>
+      <div><h4>En inglés</h4><ul><li><a href="{r}team/" hreflang="en">Equipo</a></li><li><a href="{r}faqs/" hreflang="en">Preguntas frecuentes</a></li><li><a href="{r}our-approach/" hreflang="en">Nuestro enfoque</a></li></ul></div>
       <div><h4>Contacto</h4><ul><li><a href="tel:+18174207696">Llame al (817) 420-7696</a></li><li><a href="sms:+18174207696">Envíenos un mensaje</a></li><li><a href="https://resethybridrecovery.com/es/" target="_blank" rel="noopener">Programas RESET en línea</a></li></ul>{social_html()}</div>
     </div>
     <p class="disclaimer">La información de este sitio es educativa y no es un diagnóstico ni sustituye un examen. Los resultados varían de persona a persona. Si tiene una emergencia médica, llame al 911.</p>
@@ -321,66 +322,112 @@ def price_html(p):
     trs = "".join(f"<tr><th>{esc(a)}</th><td class=\"amt\">{esc(b)}</td></tr>" for a, b in rows)
     return f'<table class="price-table"><caption>{esc(cap)}</caption><tbody>{trs}</tbody></table>'
 
-def related_html(keys):
+# Labels for the shared page template, per language
+L = {
+ "en": dict(learn="Learn more", reviewed="Reviewed by", updated="Updated " + REVIEWED, ready="Ready to Get Started?",
+            ready_p="Book online in under a minute, or call or text (817) 420-7696. Se habla español.", call_us="Call Us",
+            call_num="Call (817) 420-7696", glance="At a Glance", used_for="Often Used For", what="What Is {}?",
+            how="How {} Works", how_p="Three phases over 12 months. How fast you move through them depends on your testing, not the calendar.",
+            conds="Nerve Problems We See Most", conds_p="Different causes, different plans. Start with the one that sounds like you.",
+            helps="What It Helps With", symptoms="Common Symptoms", fit="Your exam tells us whether {} is the right fit for you.",
+            this_care="this care", expect="What to Expect", after="After Your Visit", right="Is It Right for You?",
+            tell="Tell us before treatment if any of these apply:", research="What the research says.", pricing="Pricing",
+            members="Members save on most services.", see_mem="See memberships and all pricing", see_all="See all pricing",
+            faq="Common Questions", faq_p="Have another question? Call or text (817) 420-7696.", paired="Often Paired With",
+            paired_p="Most plans combine two or three treatments.", crumbs={"people": "Who We Care For", "conditions": "Conditions"},
+            crumb_default="Services", hub="treatments/", pricing_url="pricing/"),
+ "es": dict(learn="Ver más", reviewed="Revisado por", updated="Actualizado en " + REVIEWED_ES, ready="¿Listo para empezar?",
+            ready_p="Reserve en línea en menos de un minuto, o llame o escriba al (817) 420-7696. Hablamos español.", call_us="Llámenos",
+            call_num="Llame al (817) 420-7696", glance="En resumen", used_for="Se usa para", what="¿Qué es {}?",
+            how="Cómo funciona {}", how_p="Tres fases en 12 meses. La velocidad depende de sus resultados, no del calendario.",
+            conds="Problemas de nervios más comunes", conds_p="Causas distintas, planes distintos. Empiece por la que se parezca a lo que siente.",
+            helps="Para qué sirve", symptoms="Síntomas comunes", fit="Su examen nos dice si {} es una buena opción para usted.",
+            this_care="esta atención", expect="Qué esperar", after="Después de su visita", right="¿Es para usted?",
+            tell="Avísenos antes del tratamiento si algo de esto aplica:", research="Lo que dice la investigación.", pricing="Precio",
+            members="Los miembros ahorran en la mayoría de los servicios.", see_mem="Ver membresías y todos los precios", see_all="Ver todos los precios",
+            faq="Preguntas frecuentes", faq_p="¿Tiene otra pregunta? Llame o escriba al (817) 420-7696. Le atendemos en español.", paired="Se combina con",
+            paired_p="La mayoría de los planes combinan dos o tres tratamientos.", crumbs={"people": "Para quién", "conditions": "Condiciones"},
+            crumb_default="Servicios", hub="es/servicios/", pricing_url="es/precios/"),
+}
+
+def es_service(s):
+    """Spanish version of an English service dict: English settings + Spanish text + Spanish URL."""
+    t = ES[s["path"]]
+    m = {**s, **{k: v for k, v in t.items() if k not in ("book", "alt")}}
+    m["book"] = (s["book"][0], t["book"])
+    m["alt"] = (s["alt"][0], t["alt"]) if s.get("alt") and t.get("alt") else None
+    m.update(path=t["slug"], en_path=s["path"], lang="es")
+    if "pricing" not in t: m["pricing"] = None
+    if "extra" not in t: m["extra"] = ""
+    return m
+
+def card_link(k, lang):
+    if lang == "es": return ES[k]["slug"] + "/", ES[k]["name"], BLURB_ES[k]
+    return k + "/", SERVICE_BY_PATH[k]["name"], BLURB[k]
+
+def related_html(keys, lang="en"):
     cards = []
     for k in keys:
-        s = SERVICE_BY_PATH[k]
-        cards.append(f'<a href="{{{{root}}}}{k}/" class="reveal"><h3>{s["name"]}</h3><p>{BLURB[k]}</p><span class="go">Learn more {ARROW}</span></a>')
+        href, name, blurb = card_link(k, lang)
+        cards.append(f'<a href="{{{{root}}}}{href}" class="reveal"><h3>{esc(name)}</h3><p>{esc(blurb)}</p><span class="go">{L[lang]["learn"]} {ARROW}</span></a>')
     return '<div class="related">' + "".join(cards) + "</div>"
 
-def byline():
-    return f'''<div class="byline"><span class="dot"><img src="{{{{root}}}}assets/cc-mark-olive.png" alt=""></span><span>Reviewed by <b>Dr. Jon "Rudy" Urrutia, DC</b><br>Updated {REVIEWED}</span></div>'''
+def byline(lang="en"):
+    t = L[lang]
+    return f'''<div class="byline"><span class="dot"><img src="{{{{root}}}}assets/cc-mark-olive.png" alt=""></span><span>{t["reviewed"]} <b>Dr. Jon "Rudy" Urrutia, DC</b><br>{t["updated"]}</span></div>'''
 
 def ticks(items): return '<ul class="ticks">' + "".join(f"<li>{esc(i)}</li>" for i in items) + "</ul>"
 
-def cta(s):
-    k, label = s["book"]
+def cta(s, lang="en"):
+    k, label = s["book"]; t = L[lang]
     return f'''<section class="cta-band">
   <div class="wrap"><div class="inner reveal">
-    <div><h2>Ready to Get Started?</h2><p>Book online in under a minute, or call or text (817) 420-7696. Se habla español.</p></div>
-    <div class="btns"><a class="btn btn-primary" href="{{{{jane}}}}" data-jane="{k}">{label}</a><a class="btn btn-ghost" href="tel:+18174207696">Call Us</a></div>
+    <div><h2>{t["ready"]}</h2><p>{t["ready_p"]}</p></div>
+    <div class="btns"><a class="btn btn-primary" href="{{{{jane}}}}" data-jane="{k}">{esc(label)}</a><a class="btn btn-ghost" href="tel:+18174207696">{t["call_us"]}</a></div>
   </div></div>
 </section>'''
 
-def visual(s):
-    if s["path"] in PHOTOS:
-        n, ws, ratio, alt = PHOTOS[s["path"]]
+def visual(s, lang="en"):
+    key = s.get("en_path", s["path"]); t = L[lang]
+    if key in PHOTOS:
+        n, ws, ratio, alt = PHOTOS[key]
         return (f'<div class="photo reveal"><img src="{{{{root}}}}assets/img/{n}-{ws[0]}.webp" srcset="{{{{root}}}}assets/img/{n}-{ws[0]}.webp {ws[0]}w, {{{{root}}}}assets/img/{n}-{ws[1]}.webp {ws[1]}w" '
                 f'sizes="(max-width:860px) 92vw, 44vw" width="{ws[1]}" height="{round(ws[1]*ratio)}" alt="{esc(alt)}" loading="lazy" decoding="async"></div>')
     items = s["facts"][:3] if s["facts"] else []
     rows = "".join(f"<li><b>{esc(a)}</b><span>{esc(b)}</span></li>" for a, b in items)
     helps = "".join(f"<li>{esc(h)}</li>" for h in s["helps"][:4])
-    return f'''<aside class="panel-card reveal" aria-label="{esc(s["name"])} at a glance">
+    return f'''<aside class="panel-card reveal" aria-label="{esc(s["name"])}: {t["glance"]}">
       <img class="mark" src="{{{{root}}}}assets/cc-mark-cream.png" alt="" width="68" height="88">
-      <p class="kicker">At a Glance</p>
+      <p class="kicker">{t["glance"]}</p>
       <p class="pc-title">{esc(s["name"])}</p>
       {f'<ul class="pc-facts">{rows}</ul>' if rows else ''}
-      <p class="kicker" style="margin-top:22px">Often Used For</p>
+      <p class="kicker" style="margin-top:22px">{t["used_for"]}</p>
       <ul class="pc-helps">{helps}</ul>
     </aside>'''
 
-def service_page(s):
+def service_page(s, lang="en"):
+    t = L[lang]
     lines = " ".join(f'<span class="line"><span>{esc(l)}</span></span>' for l in s["h1"])
     k, label = s["book"]
-    actions = f'<a class="btn btn-primary" href="{{{{jane}}}}" data-jane="{k}">{label}</a>'
-    actions += (f'<a class="btn btn-ghost" href="{{{{jane}}}}" data-jane="{s["alt"][0]}">{s["alt"][1]}</a>' if s.get("alt")
-                else '<a class="btn btn-ghost" href="tel:+18174207696">Call (817) 420-7696</a>')
-    facts = ("<ul class=\"facts\">" + "".join(f"<li><b>{a}</b><span>{b}</span></li>" for a, b in s["facts"]) + "</ul>") if s["facts"] else ""
-    crumb_label = {"people": "Who We Care For", "conditions": "Conditions"}.get(s["group"], "Services")
+    actions = f'<a class="btn btn-primary" href="{{{{jane}}}}" data-jane="{k}">{esc(label)}</a>'
+    actions += (f'<a class="btn btn-ghost" href="{{{{jane}}}}" data-jane="{s["alt"][0]}">{esc(s["alt"][1])}</a>' if s.get("alt")
+                else f'<a class="btn btn-ghost" href="tel:+18174207696">{t["call_num"]}</a>')
+    facts = ("<ul class=\"facts\">" + "".join(f"<li><b>{esc(a)}</b><span>{esc(b)}</span></li>" for a, b in s["facts"]) + "</ul>") if s["facts"] else ""
+    crumb_label = t["crumbs"].get(s["group"], t["crumb_default"])
     more = "".join(f"<p>{esc(p)}</p>" for p in s["more"])
-    pricing = ""
     if s.get("pricing"):
-        pricing = f'<div class="card reveal">{price_html(s["pricing"])}<p class="note">Members save on most services. <a href="{{{{root}}}}pricing/">See memberships and all pricing</a></p></div>'
+        pricing = f'<div class="card reveal">{price_html(s["pricing"])}<p class="note">{t["members"]} <a href="{{{{root}}}}{t["pricing_url"]}">{t["see_mem"]}</a></p></div>'
     else:
-        pricing = f'<div class="card reveal"><h3>Pricing</h3>{s.get("extra","")}<p class="note"><a href="{{{{root}}}}pricing/">See all pricing</a></p></div>'
-    hv = HERO_VARIANTS[SERVICES.index(s) % len(HERO_VARIANTS)]
+        pricing = f'<div class="card reveal"><h3>{t["pricing"]}</h3>{s.get("extra","")}<p class="note"><a href="{{{{root}}}}{t["pricing_url"]}">{t["see_all"]}</a></p></div>'
+    en_key = s.get("en_path", s["path"])
+    hv = HERO_VARIANTS[[x["path"] for x in SERVICES].index(en_key) % len(HERO_VARIANTS)]
     phases = ""
     if s.get("phases"):
         ph = "".join(f'<div class="phase"><span class="when">{esc(w)}</span><h3>{esc(h)}</h3><p>{esc(d)}</p></div>' for w, h, d in s["phases"])
         phases = f'''
 <section class="tint">
   <div class="wrap">
-    <div class="intro reveal"><h2>How {esc(s["name"])} Works</h2><p>Three phases over 12 months. How fast you move through them depends on your testing, not the calendar.</p></div>
+    <div class="intro reveal"><h2>{t["how"].format(esc(s["name"]))}</h2><p>{t["how_p"]}</p></div>
     <div class="phases reveal">{ph}</div>
   </div>
 </section>'''
@@ -389,14 +436,18 @@ def service_page(s):
         conds = f'''
 <section>
   <div class="wrap">
-    <div class="intro reveal"><h2>Nerve Problems We See Most</h2><p>Different causes, different plans. Start with the one that sounds like you.</p></div>
-    {related_html(s["conditions"])}
+    <div class="intro reveal"><h2>{t["conds"]}</h2><p>{t["conds_p"]}</p></div>
+    {related_html(s["conditions"], lang)}
   </div>
 </section>'''
-    helps_h = "Common Symptoms" if s["group"] == "conditions" else "What It Helps With"
+    helps_h = t["symptoms"] if s["group"] == "conditions" else t["helps"]
+    if s["group"] == "treatments" and lang == "en":
+        who = s["short"] if s["short"] == "NeuroPath" else s["short"].lower()
+    else:
+        who = t["this_care"]
     return f'''<section class="page-hero {hv}">
   <div class="wrap">
-    <a class="crumb" href="{{{{root}}}}treatments/">{crumb_label}</a>
+    <a class="crumb" href="{{{{root}}}}{t["hub"]}">{crumb_label}</a>
     <h1>{lines}</h1>
     <p class="lede">{esc(s["lede"])}</p>
     <div class="actions">{actions}</div>
@@ -407,12 +458,12 @@ def service_page(s):
 <section>
   <div class="wrap split">
     <div class="reveal">
-      <h2>What Is {esc(s["name"])}?</h2>
+      <h2>{t["what"].format(esc(s["name"]))}</h2>
       <div class="answer"><p class="lead">{esc(s["what"])}</p></div>
       <div style="margin-top:22px">{more}</div>
-      {byline()}
+      {byline(lang)}
     </div>
-    {visual(s)}
+    {visual(s, lang)}
   </div>
 </section>
 {phases}{conds}
@@ -420,7 +471,7 @@ def service_page(s):
   <div class="wrap">
     <div class="intro reveal">
       <h2>{helps_h}</h2>
-      <p>Your exam tells us whether {esc((s["short"] if s["short"] == "NeuroPath" else s["short"].lower()) if s["group"]=="treatments" else "this care")} is the right fit for you.</p>
+      <p>{t["fit"].format(esc(who))}</p>
     </div>
     <ul class="tags reveal">{"".join(f"<li>{esc(h)}</li>" for h in s["helps"])}</ul>
   </div>
@@ -429,8 +480,8 @@ def service_page(s):
 <section>
   <div class="wrap">
     <div class="cols2">
-      <div class="reveal"><h3>What to Expect</h3>{ticks(s["expect"])}</div>
-      <div class="reveal"><h3>After Your Visit</h3>{ticks(s["after"])}</div>
+      <div class="reveal"><h3>{t["expect"]}</h3>{ticks(s["expect"])}</div>
+      <div class="reveal"><h3>{t["after"]}</h3>{ticks(s["after"])}</div>
     </div>
   </div>
 </section>
@@ -438,10 +489,10 @@ def service_page(s):
 <section class="tint">
   <div class="wrap split">
     <div class="reveal">
-      <h2>Is It Right for You?</h2>
-      <p>Tell us before treatment if any of these apply:</p>
+      <h2>{t["right"]}</h2>
+      <p>{t["tell"]}</p>
       {ticks(s["caution"])}
-      <div class="evidence"><b>What the research says.</b> {esc(s["evidence"])}</div>
+      <div class="evidence"><b>{t["research"]}</b> {esc(s["evidence"])}</div>
     </div>
     {pricing}
   </div>
@@ -449,27 +500,32 @@ def service_page(s):
 
 <section>
   <div class="wrap">
-    <div class="intro reveal"><h2>Common Questions</h2><p>Have another question? Call or text (817) 420-7696.</p></div>
+    <div class="intro reveal"><h2>{t["faq"]}</h2><p>{t["faq_p"]}</p></div>
     <div class="reveal">{faq_html(s["faqs"])}</div>
   </div>
 </section>
 
 <section class="tint">
   <div class="wrap">
-    <div class="intro reveal"><h2>Often Paired With</h2><p>Most plans combine two or three treatments.</p></div>
-    {related_html(s["related"])}
+    <div class="intro reveal"><h2>{t["paired"]}</h2><p>{t["paired_p"]}</p></div>
+    {related_html(s["related"], lang)}
   </div>
 </section>
 
-{cta(s)}'''
+{cta(s, lang)}'''
 
-def service_meta(s):
-    group = {"people": "Who We Care For", "conditions": "Conditions"}.get(s["group"], "Services")
+def service_meta(s, lang="en"):
+    t = L[lang]
+    group = t["crumbs"].get(s["group"], t["crumb_default"])
+    home, hub = ("Inicio", "es/") if lang == "es" else ("Home", "")
     therapy = {"@type": s["schema"], "name": s["name"], "description": s["what"], "url": SITE + s["path"] + "/",
                "provider": {"@id": SITE + "#clinic"}}
-    return {"path": s["path"], "nav": "services", "title": s["title"], "desc": s["desc"], "page_type": "MedicalWebPage",
-            "reviewed": "2026-10-16", "trail": [("Home", ""), (group, "treatments/"), (s["name"], s["path"] + "/")],
-            "ld": [therapy, faq_ld(s["faqs"])]}
+    if lang == "es": therapy["inLanguage"] = "es-US"
+    m = {"path": s["path"], "nav": "services", "title": s["title"], "desc": s["desc"], "page_type": "MedicalWebPage",
+         "reviewed": "2026-10-18", "trail": [(home, hub), (group, t["hub"]), (s["name"], s["path"] + "/")],
+         "ld": [therapy, faq_ld(s["faqs"])]}
+    if lang == "es": m["lang"] = "es"
+    return m
 
 def hub_page():
     def grid(group):
@@ -500,6 +556,37 @@ def hub_page():
     m = {"path": "treatments", "nav": "services", "title": "Chiropractic + Rehab Services in Colleyville, TX | CVC Spine",
          "desc": "Chiropractic, shockwave, NeuroPath, rehab, massage, cupping and red light therapy in Colleyville, TX. Care for kids, athletes, expecting moms and seniors.",
          "page_type": "CollectionPage", "trail": [("Home", ""), ("Services", "treatments/")], "ld": [{"@type": "ItemList", "itemListElement": items}]}
+    return m, body
+
+def hub_page_es():
+    def grid(group):
+        cards = "".join(f'<a href="{{{{root}}}}{ES[s["path"]]["slug"]}/" class="reveal"><h3>{esc(ES[s["path"]]["name"])}</h3><p>{esc(BLURB_ES[s["path"]])}</p><span class="go">Ver más {ARROW}</span></a>' for s in SERVICES if s["group"] == group)
+        return f'<div class="related">{cards}</div>'
+    body = f'''<section class="page-hero">
+  <div class="wrap">
+    <a class="crumb" href="{{{{root}}}}es/">Inicio</a>
+    <h1><span class="line"><span>Nuestros servicios</span></span></h1>
+    <p class="lede">Quiropráctica, ondas de choque, rehabilitación, terapias de recuperación y más, todo en un solo lugar en Colleyville. ¿No sabe por dónde empezar? Reserve una visita de paciente nuevo y armamos el plan juntos.</p>
+    <div class="actions"><a class="btn btn-primary" href="{{{{jane}}}}" data-jane="newPatient">Reserve su visita de paciente nuevo</a><a class="btn btn-ghost" href="tel:+18174207696">Llame al (817) 420-7696</a></div>
+  </div>
+</section>
+<section>
+  <div class="wrap">
+    <div class="hub-group"><h2 class="reveal">Tratamientos</h2>{grid("treatments")}</div>
+    <div class="hub-group"><h2 class="reveal">Para quién</h2>{grid("people")}</div>
+    <div class="hub-group"><h2 class="reveal">Problemas de nervios</h2>{grid("conditions")}</div>
+  </div>
+</section>
+<section class="reset" aria-label="Programas RESET en línea">
+  <div class="wrap"><div class="inner reveal">
+    <div><h2>¿No vive cerca de Colleyville?</h2><p>RESET lleva nuestros programas de rehabilitación y entrenamiento en línea, para que siga el mismo enfoque desde cualquier lugar.</p></div>
+    <a class="btn btn-primary" href="https://resethybridrecovery.com/es/" target="_blank" rel="noopener">Ver programas RESET</a>
+  </div></div>
+</section>'''
+    items = [{"@type": "ListItem", "position": i + 1, "url": SITE + ES[s["path"]]["slug"] + "/", "name": ES[s["path"]]["name"]} for i, s in enumerate(SERVICES)]
+    m = {"path": "es/servicios", "lang": "es", "nav": "services", "title": "Servicios de quiropráctica y rehabilitación en Colleyville, TX | CVC Spine",
+         "desc": "Quiropráctica, ondas de choque, NeuroPath para neuropatía, rehabilitación, masaje, ventosas y luz roja en Colleyville, TX. Atención en español para niños, atletas, embarazadas y adultos mayores.",
+         "page_type": "CollectionPage", "trail": [("Inicio", "es/"), ("Servicios", "es/servicios/")], "ld": [{"@type": "ItemList", "itemListElement": items}]}
     return m, body
 
 def faq_page():
@@ -541,6 +628,9 @@ for src in sorted((ROOT / "src").glob("*.html")):
     built.append(write(m, text.split("-->\n", 1)[1]))
 for s in SERVICES:
     built.append(write(service_meta(s), service_page(s)))
+    e = es_service(s)
+    built.append(write(service_meta(e, "es"), service_page(e, "es")))
+built.append(write(*hub_page_es()))
 built.append(write(*hub_page()))
 built.append(write(*faq_page()))
 
@@ -573,6 +663,6 @@ svc_lines = "\n".join(f"- [{s['name']}]({SITE}{s['path']}/): {s['what']}" for s 
 - [FAQs]({SITE}faqs/)
 - [Team]({SITE}team/)
 - [Contact]({SITE}contact/)
-- [Inicio en español]({SITE}es/): Spanish homepage. [Neuropatía / NeuroPath]({SITE}es/neuropatia/), [Precios]({SITE}es/precios/), [Contacto]({SITE}es/contacto/)
+- [Inicio en español]({SITE}es/): Spanish homepage. [Servicios]({SITE}es/servicios/), [Neuropatía / NeuroPath]({SITE}es/neuropatia/), [Precios]({SITE}es/precios/), [Contacto]({SITE}es/contacto/)
 """)
 print(len(built), "pages built")

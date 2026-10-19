@@ -37,4 +37,4 @@
 - [FAQs](https://www.colleyvillechiropractic.com/faqs/)
 - [Team](https://www.colleyvillechiropractic.com/team/)
 - [Contact](https://www.colleyvillechiropractic.com/contact/)
-- [Inicio en español](https://www.colleyvillechiropractic.com/es/): Spanish homepage. [Neuropatía / NeuroPath](https://www.colleyvillechiropractic.com/es/neuropatia/), [Precios](https://www.colleyvillechiropractic.com/es/precios/), [Contacto](https://www.colleyvillechiropractic.com/es/contacto/)
+- [Inicio en español](https://www.colleyvillechiropractic.com/es/): Spanish homepage. [Servicios](https://www.colleyvillechiropractic.com/es/servicios/), [Neuropatía / NeuroPath](https://www.colleyvillechiropractic.com/es/neuropatia/), [Precios](https://www.colleyvillechiropractic.com/es/precios/), [Contacto](https://www.colleyvillechiropractic.com/es/contacto/)
