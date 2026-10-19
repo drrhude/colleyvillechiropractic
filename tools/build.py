@@ -192,7 +192,7 @@ def header(r, active, m=None):
         en = EN_OF.get(m["path"], "")
         return f"""<body class="home-page" lang="es">
 <a class="skip" href="#main">Saltar al contenido</a>
-<div class="offer">Pacientes nuevos: su primera visita cuesta $47. <a href="{JANE}" data-jane="special">Reserve en línea</a></div>
+<div class="offer">Pacientes nuevos: su primera visita cuesta $67. <a href="{JANE}" data-jane="special">Reserve en línea</a></div>
 <header class="site" id="top">
   <div class="wrap bar">
     <a class="brand" href="{r}es/" aria-label="Colleyville Chiropractic, inicio">
@@ -207,14 +207,14 @@ def header(r, active, m=None):
       <a class="lang-switch" href="{r}{en + '/' if en else ''}" hreflang="en" lang="en">English</a>
     </nav>
     <a class="header-phone" href="tel:+18174207696"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M5 4h4l2 5-2.5 1.5a11 11 0 0 0 5 5L15 13l5 2v4a2 2 0 0 1-2 2A16 16 0 0 1 3 6a2 2 0 0 1 2-2"/></svg>(817) 420-7696</a>
-    <a class="btn btn-primary header-cta" href="{JANE}" data-jane="special">Reserve su visita de $47</a>
+    <a class="btn btn-primary header-cta" href="{JANE}" data-jane="special">Reserve su visita de $67</a>
     <button class="menu-btn" aria-label="Abrir menú" aria-expanded="false" aria-controls="nav"><span></span><span></span><span></span></button>
   </div>
 </header>"""
     es = ES_PAIRS.get(m["path"], "es")
     return f"""<body class="home-page">
 <a class="skip" href="#main">Skip to content</a>
-<div class="offer">New patients: your first visit is $47. <a href="{JANE}" data-jane="special">Book Online</a></div>
+<div class="offer">New patients: your first visit is $67. <a href="{JANE}" data-jane="special">Book Online</a></div>
 <header class="site" id="top">
   <div class="wrap bar">
     <a class="brand" href="{r}" aria-label="Colleyville Chiropractic home">
@@ -231,7 +231,7 @@ def header(r, active, m=None):
       <a class="lang-switch" href="{r}{es}/" hreflang="es" lang="es">Español</a>
     </nav>
     <a class="header-phone" href="tel:+18174207696"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M5 4h4l2 5-2.5 1.5a11 11 0 0 0 5 5L15 13l5 2v4a2 2 0 0 1-2 2A16 16 0 0 1 3 6a2 2 0 0 1 2-2"/></svg>(817) 420-7696</a>
-    <a class="btn btn-primary header-cta" href="{JANE}" data-jane="special">Book Your $47 Visit</a>
+    <a class="btn btn-primary header-cta" href="{JANE}" data-jane="special">Book Your $67 Visit</a>
     <button class="menu-btn" aria-label="Open menu" aria-expanded="false" aria-controls="nav"><span></span><span></span><span></span></button>
   </div>
 </header>"""
@@ -255,7 +255,7 @@ def footer_es(r):
 </footer>
 <div class="dock" aria-label="Acciones rápidas">
   <a class="btn btn-ghost" href="tel:+18174207696">Llamar</a>
-  <a class="btn btn-primary" href="{JANE}" data-jane="special">Visita de $47</a>
+  <a class="btn btn-primary" href="{JANE}" data-jane="special">Visita de $67</a>
 </div>
 <script src="{r}assets/site.js"></script>
 </body>
@@ -284,7 +284,7 @@ def footer(r):
 </footer>
 <div class="dock" aria-label="Quick actions">
   <a class="btn btn-ghost" href="tel:+18174207696">Call</a>
-  <a class="btn btn-primary" href="{JANE}" data-jane="special">Book $47 Visit</a>
+  <a class="btn btn-primary" href="{JANE}" data-jane="special">Book $67 Visit</a>
 </div>
 <!-- GHL text widget goes here (paste the existing chat widget script) -->
 <script src="{r}assets/site.js"></script>
@@ -650,7 +650,7 @@ svc_lines = "\n".join(f"- [{s['name']}]({SITE}{s['path']}/): {s['what']}" for s 
 - Hours: Monday and Wednesday 9am to 6pm, Tuesday 2pm to 6pm, Thursday by appointment, Friday closed, Saturday 9am to 12pm, Sunday closed
 - Booking: {JANE}
 - Chiropractor: Dr. Jon "Rudy" Urrutia, DC. Bachelor's degree and Doctor of Chiropractic from Parker University (2022), Advanced Activator certified, 10 years active duty U.S. Coast Guard
-- New patient special: $47. New patient exam $120. Follow-up visit $60 ($45 member).
+- New patient special: $67, or $47 if prepaid at the confirmation call. New patient exam $120. Follow-up visit $60 ($45 member).
 - Memberships: CVC Care $49/year, CVC Wellness $89/month, CVC Complete $169/month. Wellness and Complete include 2 recovery therapies a month (cupping, vibration plate or myofascial release).
 - Online programs: https://resethybridrecovery.com/
 

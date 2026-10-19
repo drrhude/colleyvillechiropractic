@@ -4,7 +4,7 @@ FAQ_GROUPS = [
 ("Getting Started", [
  ("What happens at my first visit?", "We talk through your history and what you want to get back to, then do an orthopedic, neurological and movement exam. You'll hear what we found in plain English and what we recommend. When it's appropriate, you get your first treatment the same day. Plan on about an hour."),
  ("Do I need a referral to see a chiropractor?", "No. You can book directly with us online or by calling or texting (817) 420-7696."),
- ("How much is the first visit?", "New patients can start with our $47 new patient special. A standard new patient exam is $120. If you're using Blue Cross Blue Shield of Texas, we'll verify your benefits first."),
+ ("How much is the first visit?", "New patients can start with our $67 new patient special, or $47 if you prepay when we call to confirm your visit. A standard new patient exam is $120. If you're using Blue Cross Blue Shield of Texas, we'll verify your benefits first."),
  ("What should I wear?", "Comfortable clothes you can move in, like athletic wear. We'll have you do some simple movements during the exam."),
  ("Who is the chiropractor?", "Dr. Jon \"Rudy\" Urrutia, DC. He earned both his bachelor's degree and his Doctor of Chiropractic from Parker University, graduating in 2022, and he is Advanced Activator certified. Before that, he served 10 years on active duty in the U.S. Coast Guard. He sees patients in English and Spanish."),
  ("How long have you been in Colleyville?", "This clinic has cared for Colleyville families since 1999. Dr. Jon \"Rudy\" Urrutia, DC, has owned and led the practice since 2023."),
@@ -15,7 +15,7 @@ FAQ_GROUPS = [
 ]),
 ("Insurance + Payment", [
  ("Do you take insurance?", "Yes. We're in-network with Blue Cross Blue Shield of Texas. We verify your benefits and eligibility before your visit so you know what to expect. For other plans, call us and we'll walk through your options."),
- ("How much does chiropractic cost without insurance?", "A follow-up visit is $60, or $45 with a CVC Care membership. A new patient exam is $120, and new patients can start with the $47 special. Re-examinations are $80 ($60 for members)."),
+ ("How much does chiropractic cost without insurance?", "A follow-up visit is $60, or $45 with a CVC Care membership. A new patient exam is $120, and new patients can start with the $67 special. Re-examinations are $80 ($60 for members)."),
  ("Can I use my HSA or FSA?", "Yes. We accept HSA and FSA cards for eligible services."),
  ("Do you offer financing?", "Yes. Financing is available through CareCredit and Cherry, mainly for larger programs like NeuroPath."),
  ("What is your cancellation policy?", "Please give us at least 24 hours' notice. Late cancellations are $50 and no-shows are $75."),

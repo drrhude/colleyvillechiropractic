@@ -6,7 +6,7 @@ REVIEWED = "October 2026"
 
 # Pricing blocks reused across pages
 P_CHIRO = ("Chiropractic Visits", [
-    ("New patient special", "$47"),
+    ("New patient special", "$67"),
     ("New patient exam", "$120"),
     ("Follow-up visit", "$60"),
     ("Member visit", "$45"),
@@ -56,7 +56,7 @@ dict(
  h1=("Chiropractic Care", "in Colleyville"),
  lede="Hands-on adjustments for back pain, neck pain, sciatica and headaches, paired with movement work so the relief lasts. Families across Colleyville have trusted this clinic since 1999.",
  book=("newPatient", "Book a New Patient Visit"), alt=("existing", "Existing Patient Booking"),
- facts=[("$47", "New patient special"), ("$45", "Member visit"), ("BCBS", "In-network"), ("Sat", "9am to 12pm")],
+ facts=[("$67", "New patient special"), ("$45", "Member visit"), ("BCBS", "In-network"), ("Sat", "9am to 12pm")],
  what="A chiropractic adjustment is a quick, controlled force applied to a joint that isn't moving well, most often in the spine. It can reduce pain and muscle guarding and restore motion. The pop you may hear is gas releasing from the joint, not bones cracking.",
  more=["An adjustment opens a window: less pain, more motion. What it doesn't do on its own is make you stronger. That's why most of our plans pair adjustments with targeted exercise, so you're not back on the table every few weeks with the same problem.",
        "Prefer no popping? We use three techniques and pick the one you're comfortable with: Diversified (classic hands-on), Thompson (a drop table that uses less force) and Activator (a gentle handheld instrument). Dr. Rudy is Advanced Activator certified."],
@@ -461,7 +461,7 @@ dict(
  h1=("Numb, Tingling", "or Burning Feet"),
  lede="Not every numb foot is neuropathy. Sometimes it's a pinched nerve in your lower back. We test both and point you to the right plan, here or with your doctor.",
  book=("neuropath", "Book a NeuroPath Consult"), alt=None,
- facts=[("2", "Common sources we check"), ("1 hr", "Thorough first visit"), ("$47", "New patient special")],
+ facts=[("2", "Common sources we check"), ("1 hr", "Thorough first visit"), ("$67", "New patient special")],
  what="Numbness, tingling or burning in the feet usually comes from irritated or damaged nerves. The two most common sources are peripheral neuropathy, where the small nerves in the feet are affected, and a pinched nerve in the lower back, like sciatica or spinal stenosis. Age, vitamin B12 deficiency, alcohol, thyroid problems and some medications can also play a role.",
  more=["The treatment depends on the source. Back-related numbness often responds to chiropractic care and rehab. Neuropathy in both feet usually fits our NeuroPath program. And some causes, like B12 or thyroid problems, need bloodwork with your doctor, so we'll tell you when that's the next step.",
        "If no clear cause is found, it's called idiopathic neuropathy. It's common in adults over 60, and NeuroPath can still help with symptoms and balance."],
@@ -472,7 +472,7 @@ dict(
  caution=["Sudden numbness, weakness or trouble speaking: call 911", "Numbness in the groin or new bladder or bowel changes: go to the ER", "A pacemaker or implanted electronic device", "Pregnancy"],
  evidence="Finding the source matters most. Spine-related nerve symptoms often improve with manual care and exercise, and balance training reduces fall risk in people with neuropathy. Evidence for light therapy and nerve stimulation is mixed, so we re-test as we go.",
  pricing=None,
- extra="""<p class="note">Start with a $47 new patient visit or a NeuroPath consult. If it's neuropathy, NeuroPath is priced after your consult.</p>""",
+ extra="""<p class="note">Start with a $67 new patient visit or a NeuroPath consult. If it's neuropathy, NeuroPath is priced after your consult.</p>""",
  faqs=[("Is numbness in my feet from my back?", "It can be. A pinched nerve in the lower back can cause numbness or tingling down the leg and into the foot, usually on one side. Neuropathy more often affects both feet evenly. Testing tells us which."),
        ("When should I worry about numb feet?", "Sudden numbness, weakness, numbness in the groin, or new bladder or bowel changes need emergency care. Gradual numbness should still be checked, sooner rather than later."),
        ("Do you check vitamin B12 levels?", "We don't draw blood in the clinic. If your history points to B12, thyroid or blood sugar, we'll recommend bloodwork with your doctor.")],

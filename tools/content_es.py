@@ -6,7 +6,7 @@ Edit text here, then run: python3 tools/build.py"""
 REVIEWED_ES = "octubre de 2026"
 
 P_CHIRO = ("Visitas de quiropráctica", [
-    ("Oferta para pacientes nuevos", "$47"),
+    ("Oferta para pacientes nuevos", "$67"),
     ("Examen de paciente nuevo", "$120"),
     ("Visita de seguimiento", "$60"),
     ("Visita de miembro", "$45"),
@@ -56,7 +56,7 @@ ES = {
  h1=("Quiropráctica", "en Colleyville"),
  lede="Ajustes manuales para el dolor de espalda, el dolor de cuello, la ciática y los dolores de cabeza, junto con ejercicios para que el alivio dure. Familias de Colleyville confían en esta clínica desde 1999.",
  book="Reserve su visita de paciente nuevo", alt="Pacientes actuales",
- facts=[("$47", "Oferta para pacientes nuevos"), ("$45", "Visita de miembro"), ("BCBS", "Dentro de la red"), ("Sáb", "9 a 12")],
+ facts=[("$67", "Oferta para pacientes nuevos"), ("$45", "Visita de miembro"), ("BCBS", "Dentro de la red"), ("Sáb", "9 a 12")],
  what="Un ajuste quiropráctico es una fuerza rápida y controlada que se aplica a una articulación que no se mueve bien, casi siempre en la columna. Puede reducir el dolor y la tensión muscular y devolver el movimiento. El chasquido que a veces se escucha es gas que se libera de la articulación, no huesos que truenan.",
  more=["Un ajuste abre una ventana: menos dolor y más movimiento. Lo que no hace por sí solo es fortalecerlo. Por eso la mayoría de nuestros planes combinan ajustes con ejercicios específicos, para que no regrese cada pocas semanas con el mismo problema.",
        "¿Prefiere sin chasquidos? Usamos tres técnicas y elegimos la que le resulte cómoda: Diversified (manual clásica), Thompson (una mesa con caída que usa menos fuerza) y Activator (un instrumento manual suave). El Dr. Rudy tiene certificación avanzada en Activator."],
@@ -402,7 +402,7 @@ ES = {
  h1=("Pies entumecidos,", "con hormigueo o ardor"),
  lede="No todo pie entumecido es neuropatía. A veces es un nervio pinchado en la espalda baja. Revisamos ambos y le indicamos el plan correcto, aquí o con su médico.",
  book="Reserve su consulta NeuroPath",
- facts=[("2", "Causas comunes que revisamos"), ("1 hora", "Primera visita completa"), ("$47", "Oferta para pacientes nuevos")],
+ facts=[("2", "Causas comunes que revisamos"), ("1 hora", "Primera visita completa"), ("$67", "Oferta para pacientes nuevos")],
  what="El entumecimiento, el hormigueo o el ardor en los pies normalmente vienen de nervios irritados o dañados. Las dos causas más comunes son la neuropatía periférica, que afecta los nervios pequeños de los pies, y un nervio pinchado en la espalda baja, como la ciática o la estenosis espinal. La edad, la falta de vitamina B12, el alcohol, problemas de tiroides y algunos medicamentos también pueden influir.",
  more=["El tratamiento depende de la causa. El entumecimiento que viene de la espalda muchas veces responde a la quiropráctica y la rehabilitación. La neuropatía en ambos pies normalmente encaja en nuestro programa NeuroPath. Y algunas causas, como la B12 o la tiroides, necesitan análisis de sangre con su médico, así que le diremos cuándo ese es el siguiente paso.",
        "Si no se encuentra una causa clara, se llama neuropatía idiopática. Es común en adultos mayores de 60, y NeuroPath aun así puede ayudar con los síntomas y el equilibrio."],
@@ -411,7 +411,7 @@ ES = {
  after=["Siga el plan para su causa: quiropráctica, NeuroPath o ambos", "Revise sus pies todos los días si tiene poca sensibilidad", "Avísenos de medicamentos nuevos"],
  caution=["Entumecimiento repentino, debilidad o dificultad para hablar: llame al 911", "Entumecimiento en la ingle o cambios nuevos en la vejiga o el intestino: vaya a emergencias", "Marcapasos u otro aparato electrónico implantado", "Embarazo"],
  evidence="Lo más importante es encontrar la causa. Los síntomas de nervios que vienen de la columna muchas veces mejoran con atención manual y ejercicio, y el entrenamiento de equilibrio reduce el riesgo de caídas en personas con neuropatía. La evidencia sobre terapia de luz y estimulación nerviosa es mixta, así que volvemos a medir en el camino.",
- extra="""<p class="note">Empiece con una visita de paciente nuevo de $47 o una consulta NeuroPath. Si es neuropatía, el precio de NeuroPath se define después de su consulta.</p>""",
+ extra="""<p class="note">Empiece con una visita de paciente nuevo de $67 o una consulta NeuroPath. Si es neuropatía, el precio de NeuroPath se define después de su consulta.</p>""",
  faqs=[("¿El entumecimiento de mis pies viene de la espalda?", "Puede ser. Un nervio pinchado en la espalda baja puede causar entumecimiento u hormigueo que baja por la pierna hasta el pie, normalmente de un solo lado. La neuropatía más bien afecta ambos pies por igual. Las pruebas nos dicen cuál es."),
        ("¿Cuándo debo preocuparme por los pies entumecidos?", "El entumecimiento repentino, la debilidad, el entumecimiento en la ingle o cambios nuevos en la vejiga o el intestino necesitan atención de emergencia. El entumecimiento gradual también debe revisarse, mejor pronto que tarde."),
        ("¿Revisan la vitamina B12?", "No sacamos sangre en la clínica. Si su historial apunta a la B12, la tiroides o el azúcar, le recomendamos análisis de sangre con su médico.")],
