@@ -1,0 +1,792 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow, noarchive">
+<meta name="referrer" content="no-referrer">
+<title>Product Desk | CVC Staff</title>
+<link rel="icon" href="../assets/apple-touch-icon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Newsreader:opsz,wght@6..72,400;6..72,500&family=Hanken+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --pine:#1F251D; --olive:#4A5040; --olive-d:#3C4134; --sage:#A9AE98; --mist:#EAEAE1; --paper:#F8F7F2;
+  --card:#FFFFFF; --ink:#141714; --muted:#5E6157; --line:#DCDCD0; --brass:#B4935A; --cream:#ECE6D9;
+  --good:#3F6B3A; --warn:#8A5A12; --warn-bg:#FBF1DC; --bad:#9A2F22;
+  --serif:"Newsreader", Georgia, serif; --sans:"Hanken Grotesk", system-ui, sans-serif;
+  color-scheme: light;
+}
+*,*::before,*::after{box-sizing:border-box}
+html,body{margin:0}
+body{background:var(--paper);color:var(--ink);font:15px/1.5 var(--sans);-webkit-font-smoothing:antialiased}
+button,input,select,textarea{font:inherit;color:inherit}
+button{cursor:pointer}
+h1,h2,h3{font-family:var(--serif);font-weight:400;margin:0;line-height:1.15}
+.hidden{display:none !important}
+:focus-visible{outline:2px solid var(--olive);outline-offset:2px;border-radius:6px}
+.num{font-variant-numeric:tabular-nums}
+
+/* ---------- lock screen */
+#lock{min-height:100vh;display:grid;place-items:center;padding:24px 16px;background:var(--pine)}
+.lock-card{width:100%;max-width:380px;background:var(--paper);border-radius:18px;padding:32px 28px;text-align:center}
+.lock-card img{width:96px;margin:0 auto 14px;display:block}
+.lock-card h1{font-size:28px}
+.lock-card p{color:var(--muted);margin:6px 0 22px;font-size:14px}
+.lock-card input{width:100%;padding:13px 14px;border:1px solid var(--line);border-radius:10px;background:#fff;font-size:16px}
+.lock-card .btn{width:100%;margin-top:12px}
+.lock-err{color:var(--bad);font-size:14px;min-height:21px;margin-top:10px}
+
+/* ---------- buttons/inputs */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;border:1px solid transparent;border-radius:999px;padding:10px 18px;font-weight:600;font-size:14px;background:var(--olive);color:#fff;transition:background .2s}
+.btn:hover{background:var(--olive-d)}
+.btn.ghost{background:transparent;border-color:var(--line);color:var(--ink)}
+.btn.ghost:hover{background:var(--mist)}
+.btn.small{padding:6px 12px;font-size:13px}
+.btn.danger{background:transparent;color:var(--bad);border-color:#E8C9C3}
+.field{display:flex;flex-direction:column;gap:4px;font-size:12px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.04em}
+.field input,.field select,.field textarea{text-transform:none;letter-spacing:0;font-weight:400;font-size:14px;color:var(--ink);padding:9px 11px;border:1px solid var(--line);border-radius:9px;background:#fff;width:100%}
+textarea{resize:vertical}
+
+/* ---------- app shell */
+header.top{position:sticky;top:0;z-index:20;background:var(--pine);color:#fff}
+header.top .bar{display:flex;align-items:center;gap:12px;padding:10px 16px;max-width:1440px;margin:0 auto}
+header.top img{height:34px}
+header.top .title{font-family:var(--serif);font-size:20px;line-height:1.1}
+header.top .title small{display:block;font-family:var(--sans);font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--sage)}
+header.top .sp{flex:1}
+header.top .btn.ghost{color:#fff;border-color:rgba(255,255,255,.3)}
+header.top .btn.ghost:hover{background:rgba(255,255,255,.08)}
+main{max-width:1440px;margin:0 auto;padding:16px;display:grid;grid-template-columns:minmax(0,1fr) 440px;gap:20px;align-items:start}
+@media (max-width:1060px){main{grid-template-columns:minmax(0,1fr)}}
+
+/* ---------- products */
+.filters{display:flex;flex-wrap:wrap;gap:10px;align-items:end;margin-bottom:10px}
+.filters .search{flex:1 1 240px}
+.filters .search input{font-size:16px;padding:11px 14px}
+.chips{display:flex;gap:6px;overflow-x:auto;padding:4px 0 10px;scrollbar-width:thin}
+.chip{flex:0 0 auto;border:1px solid var(--line);background:#fff;border-radius:999px;padding:6px 12px;font-size:13px;white-space:nowrap}
+.chip[aria-pressed="true"]{background:var(--olive);border-color:var(--olive);color:#fff}
+.chip .ct{opacity:.6;margin-left:4px}
+.count{font-size:13px;color:var(--muted);margin:2px 0 8px}
+.plist{display:flex;flex-direction:column;gap:6px}
+.prow{display:grid;grid-template-columns:minmax(0,1fr) auto auto;gap:14px;align-items:center;background:var(--card);border:1px solid var(--line);border-radius:12px;padding:10px 12px}
+.prow .nm{font-weight:600;background:none;border:0;padding:0;text-align:left;color:var(--ink)}
+.prow .nm:hover{text-decoration:underline}
+.prow .tg{font-size:13px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.prow .meta{display:flex;gap:6px;flex-wrap:wrap;margin-top:3px}
+.badge{font-size:11px;padding:2px 7px;border-radius:999px;background:var(--mist);color:var(--olive);font-weight:600}
+.badge.warn{background:var(--warn-bg);color:var(--warn)}
+.badge.type{background:#fff;border:1px solid var(--line);color:var(--muted)}
+.prices{display:grid;grid-template-columns:repeat(3,72px);gap:6px;text-align:right;font-size:13px}
+.prices span{display:block;font-size:10px;text-transform:uppercase;letter-spacing:.05em;color:var(--muted)}
+.prices b{font-weight:600}
+.prices .cost{color:var(--muted)}
+.add{width:36px;height:36px;border-radius:50%;border:0;background:var(--olive);color:#fff;font-size:20px;line-height:1}
+.add:hover{background:var(--olive-d)}
+@media (max-width:620px){
+  .prow{grid-template-columns:minmax(0,1fr) auto}
+  .prow .prices{grid-column:1 / -1;grid-row:2;grid-template-columns:repeat(3,1fr);text-align:left}
+  .prow .add{grid-column:2;grid-row:1}
+}
+
+/* ---------- program panel */
+aside.prog{position:sticky;top:70px;background:var(--card);border:1px solid var(--line);border-radius:16px;padding:16px;max-height:calc(100vh - 86px);overflow:auto}
+@media (max-width:1060px){aside.prog{position:static;max-height:none}}
+.prog h2{font-size:24px;margin-bottom:10px}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.grid2 .full{grid-column:1 / -1}
+.lines{margin:14px 0 8px;display:flex;flex-direction:column;gap:8px}
+.empty{border:1px dashed var(--line);border-radius:12px;padding:18px;text-align:center;color:var(--muted);font-size:14px}
+.line{border:1px solid var(--line);border-radius:12px;padding:10px}
+.line .l1{display:flex;gap:8px;align-items:start}
+.line .l1 .lname{flex:1;font-weight:600;font-size:14px}
+.line .l1 .lname input{width:100%;border:1px solid var(--line);border-radius:7px;padding:5px 8px;font-weight:600}
+.x{border:0;background:none;color:var(--muted);font-size:18px;line-height:1;padding:2px 4px}
+.x:hover{color:var(--bad)}
+.line .l2{display:flex;gap:10px;align-items:center;margin-top:8px;flex-wrap:wrap}
+.qty{display:inline-flex;border:1px solid var(--line);border-radius:999px;overflow:hidden}
+.qty button{border:0;background:var(--mist);width:28px;height:28px}
+.qty input{width:38px;border:0;text-align:center;font-weight:600}
+.pricein{display:inline-flex;align-items:center;gap:2px;border:1px solid var(--line);border-radius:8px;padding:0 6px;font-size:13px}
+.pricein input{width:70px;border:0;padding:5px 0;text-align:right}
+.line .ltot{margin-left:auto;font-weight:700}
+.line .staff{font-size:12px;color:var(--muted);margin-top:6px}
+.line details{margin-top:6px;font-size:13px}
+.line details summary{cursor:pointer;color:var(--olive);font-weight:600}
+.line details textarea{width:100%;margin-top:6px;border:1px solid var(--line);border-radius:8px;padding:7px;font-size:13px;min-height:58px}
+.tot{border-top:1px solid var(--line);margin-top:10px;padding-top:10px;font-size:14px}
+.tot .r{display:flex;justify-content:space-between;padding:2px 0}
+.tot .r.big{font-size:20px;font-weight:700;font-family:var(--serif)}
+.staffbox{background:var(--mist);border-radius:12px;padding:10px 12px;margin-top:10px;font-size:13px}
+.staffbox .r{display:flex;justify-content:space-between}
+.staffbox .r b{font-size:15px}
+.staffbox .tag{font-size:10px;letter-spacing:.08em;text-transform:uppercase;color:var(--olive);font-weight:700;margin-bottom:4px}
+.actions{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
+.saved{margin-top:14px;border-top:1px solid var(--line);padding-top:10px}
+.saved h3{font-size:17px;margin-bottom:6px}
+.saved .s{display:flex;align-items:center;gap:8px;padding:6px 0;border-bottom:1px solid var(--mist);font-size:13px}
+.saved .s .n{flex:1}
+.saved .s small{color:var(--muted);display:block}
+.chk{display:flex;gap:8px;align-items:center;font-size:13px;color:var(--ink)}
+.minibar{display:none}
+@media (max-width:1060px){
+  .minibar{display:flex;position:fixed;left:16px;right:16px;bottom:14px;z-index:25;background:var(--pine);color:#fff;border-radius:999px;padding:10px 16px;align-items:center;gap:10px;box-shadow:0 8px 24px rgba(0,0,0,.25);border:0;font-weight:600}
+  .minibar .sp{flex:1}
+  body.has-lines main{padding-bottom:80px}
+}
+
+/* ---------- drawer */
+.scrim{position:fixed;inset:0;background:rgba(20,23,20,.45);z-index:40}
+.drawer{position:fixed;top:0;right:0;bottom:0;width:min(560px,100%);background:var(--paper);z-index:41;overflow:auto;padding:20px 22px 40px;box-shadow:-10px 0 30px rgba(0,0,0,.15)}
+.drawer .dh{display:flex;align-items:start;gap:10px;margin-bottom:6px}
+.drawer .dh h2{flex:1;font-size:28px}
+.drawer .sub{color:var(--muted);margin-bottom:12px}
+.drawer h4{font-size:12px;text-transform:uppercase;letter-spacing:.06em;color:var(--olive);margin:18px 0 6px}
+.drawer ul{margin:0;padding-left:18px}
+.drawer .note{background:var(--warn-bg);color:var(--warn);border-radius:10px;padding:10px 12px;font-size:13px;margin:10px 0}
+.pricecard{background:#fff;border:1px solid var(--line);border-radius:12px;padding:12px;display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:8px}
+.pricecard .k{font-size:11px;text-transform:uppercase;letter-spacing:.05em;color:var(--muted)}
+.pricecard .v{font-size:20px;font-weight:700;font-family:var(--serif)}
+.settings-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:10px}
+.help{font-size:13px;color:var(--muted);margin:4px 0}
+.toast{position:fixed;left:50%;bottom:24px;transform:translateX(-50%);background:var(--pine);color:#fff;padding:10px 18px;border-radius:999px;font-size:14px;z-index:60;max-width:calc(100% - 32px);text-align:center}
+@media (max-width:1060px){body.has-lines .toast{bottom:84px}}
+@media (max-width:560px){
+  header.top .title small{display:none}
+  header.top .title{font-size:18px}
+  header.top .bar{gap:8px}
+  .sl{display:none}
+}
+
+/* ---------- patient document (print only) */
+#doc{display:none}
+@media print{
+  @page{size:letter;margin:0.55in 0.6in}
+  body{background:#fff}
+  #app,#lock,.drawer,.scrim,.toast,.minibar{display:none !important}
+  #doc{display:block;color:#141714;font:10.5pt/1.45 var(--sans)}
+}
+#doc .dhead{display:flex;align-items:center;gap:18px;border-bottom:2px solid var(--olive);padding-bottom:12px}
+#doc .dhead img{height:78px}
+#doc .dhead .who{flex:1;text-align:right;font-size:9.5pt;color:var(--muted);line-height:1.5}
+#doc .dhead .who b{display:block;color:var(--ink);font-family:var(--serif);font-size:14pt;font-weight:500}
+#doc h1{font-size:24pt;margin:18px 0 4px;color:var(--pine)}
+#doc .facts{display:flex;flex-wrap:wrap;gap:6px 26px;font-size:10pt;color:var(--muted);margin-bottom:14px}
+#doc .facts b{color:var(--ink);font-weight:600}
+#doc table{width:100%;border-collapse:collapse;margin-top:6px}
+#doc th{text-align:left;font-size:8.5pt;text-transform:uppercase;letter-spacing:.06em;color:var(--olive);border-bottom:1px solid var(--sage);padding:6px 6px}
+#doc td{vertical-align:top;padding:9px 6px;border-bottom:1px solid #E4E4DA;font-size:10pt}
+#doc tr{break-inside:avoid}
+#doc td.n{width:22px;color:var(--muted)}
+#doc td .pn{font-weight:600}
+#doc td .pt{color:var(--muted);font-size:9pt}
+#doc td .inc{font-size:8.5pt;color:var(--muted);margin-top:3px}
+#doc td.how{width:38%;font-size:9.5pt}
+#doc td.q,#doc th.q{text-align:center;width:40px}
+#doc td.p,#doc th.p{text-align:right;width:80px;white-space:nowrap}
+#doc .totals{margin-left:auto;width:290px;margin-top:10px;font-size:10.5pt;break-inside:avoid}
+#doc .totals .r{display:flex;justify-content:space-between;padding:3px 0}
+#doc .totals .big{border-top:2px solid var(--olive);margin-top:4px;padding-top:7px;font-family:var(--serif);font-size:16pt}
+#doc .totals .mo{color:var(--muted);font-size:10pt}
+#doc .notes{margin-top:18px;background:#F3F2EC;border-radius:8px;padding:12px 14px;break-inside:avoid;white-space:pre-wrap}
+#doc .notes b{display:block;font-size:8.5pt;text-transform:uppercase;letter-spacing:.06em;color:var(--olive);margin-bottom:4px}
+#doc .sign{display:grid;grid-template-columns:2fr 1fr;gap:30px;margin-top:34px;break-inside:avoid}
+#doc .sign div{border-top:1px solid #999;padding-top:4px;font-size:9pt;color:var(--muted)}
+#doc .foot{margin-top:22px;font-size:8pt;color:var(--muted);border-top:1px solid #E4E4DA;padding-top:8px;break-inside:avoid}
+</style>
+</head>
+<body>
+
+<!-- =============== LOCK =============== -->
+<section id="lock">
+  <form class="lock-card" id="lockForm" autocomplete="off">
+    <img src="../assets/logo-olive.png" alt="Colleyville Chiropractic">
+    <h1>Product Desk</h1>
+    <p>Staff only. Enter the password to unlock.</p>
+    <input type="password" id="pw" placeholder="Password" autocomplete="current-password" required>
+    <button class="btn" type="submit" id="unlockBtn">Unlock</button>
+    <div class="lock-err" id="lockErr" role="alert"></div>
+  </form>
+</section>
+
+<!-- =============== APP =============== -->
+<div id="app" class="hidden">
+  <header class="top"><div class="bar">
+    <img src="../assets/cc-mark-cream.png" alt="">
+    <div class="title">Product Desk<small>Colleyville Chiropractic | CVC Spine</small></div>
+    <div class="sp"></div>
+    <button class="btn ghost small" id="openSettings"><span class="sl">Pricing &amp; </span>Settings</button>
+    <button class="btn ghost small" id="lockBtn">Lock</button>
+  </div></header>
+
+  <main>
+    <section>
+      <div class="filters">
+        <label class="field search">Search
+          <input type="search" id="q" placeholder="Product, ingredient, condition…" autocomplete="off">
+        </label>
+        <label class="field">Type
+          <select id="typeSel"><option value="">All types</option></select>
+        </label>
+        <label class="field">Sort
+          <select id="sortSel">
+            <option value="name">Name</option>
+            <option value="cost">Cost, low to high</option>
+            <option value="retail">Retail, high to low</option>
+            <option value="profit">Profit $, high to low</option>
+          </select>
+        </label>
+      </div>
+      <div class="chips" id="chips" role="group" aria-label="Category"></div>
+      <div class="count" id="count"></div>
+      <div class="plist" id="plist"></div>
+    </section>
+
+    <aside class="prog" id="prog">
+      <h2>Program</h2>
+      <div class="grid2">
+        <label class="field">Patient name<input id="pPatient" placeholder="Jane Smith"></label>
+        <label class="field">Program length<input id="pLength" placeholder="e.g. 12 weeks"></label>
+        <label class="field full">Program title<input id="pTitle" placeholder="Your Care Protocol"></label>
+      </div>
+      <div class="lines" id="lines"></div>
+      <div style="display:flex;gap:8px;flex-wrap:wrap">
+        <button class="btn ghost small" id="addCustom">+ Custom item</button>
+      </div>
+      <div class="grid2" style="margin-top:12px">
+        <label class="field">Discount
+          <div style="display:flex;gap:6px">
+            <select id="pDiscType" style="width:70px"><option value="pct">%</option><option value="amt">$</option></select>
+            <input id="pDisc" type="number" min="0" step="any" placeholder="0">
+          </div>
+        </label>
+        <label class="field">Monthly payments
+          <input id="pMonths" type="number" min="0" step="1" placeholder="0 = pay in full">
+        </label>
+        <label class="field full">Notes for patient (prints on PDF)
+          <textarea id="pNotes" rows="3" placeholder="e.g. Start Phase 1 on Monday. Bring your Pulse Ox to your next visit."></textarea>
+        </label>
+        <label class="chk full"><input type="checkbox" id="pSign"> Add signature line to PDF</label>
+      </div>
+      <div class="tot" id="tot"></div>
+      <div class="staffbox" id="staffbox"></div>
+      <div class="actions">
+        <button class="btn" id="printBtn">Print patient PDF</button>
+        <button class="btn ghost" id="saveBtn">Save program</button>
+        <button class="btn ghost" id="newBtn">New</button>
+      </div>
+      <div class="saved" id="saved"></div>
+    </aside>
+  </main>
+  <button class="minibar" id="minibar"><span id="mbCount">0 items</span><span class="sp"></span><span id="mbTotal" class="num">$0</span><span>View program ↓</span></button>
+</div>
+
+<div class="scrim hidden" id="scrim"></div>
+<div class="drawer hidden" id="drawer" role="dialog" aria-modal="true"></div>
+<div id="doc" aria-hidden="true"></div>
+
+<script>
+(() => {
+"use strict";
+// ================================================================ crypto
+const DATA_URL = "data.enc.json";
+const SKEY = "cvcStaff.key", LKEY = "cvcStaff.state";
+const te = new TextEncoder(), td = new TextDecoder();
+const ub64 = s => Uint8Array.from(atob(s), c => c.charCodeAt(0));
+const b64 = u8 => { let s = ""; for (let i = 0; i < u8.length; i += 0x8000) s += String.fromCharCode(...u8.subarray(i, i + 0x8000)); return btoa(s); };
+let KEY = null, FILE = null, DB = null;
+
+async function deriveKey(password, salt, iter) {
+  const base = await crypto.subtle.importKey("raw", te.encode(password), "PBKDF2", false, ["deriveKey"]);
+  return crypto.subtle.deriveKey({ name: "PBKDF2", hash: "SHA-256", salt, iterations: iter },
+    base, { name: "AES-GCM", length: 256 }, true, ["encrypt", "decrypt"]);
+}
+async function decryptWith(key, ivB64, ctB64) {
+  const pt = await crypto.subtle.decrypt({ name: "AES-GCM", iv: ub64(ivB64) }, key, ub64(ctB64));
+  return JSON.parse(td.decode(pt));
+}
+async function encryptWith(key, obj) {
+  const iv = crypto.getRandomValues(new Uint8Array(12));
+  const ct = new Uint8Array(await crypto.subtle.encrypt({ name: "AES-GCM", iv }, key, te.encode(JSON.stringify(obj))));
+  return { iv: b64(iv), ct: b64(ct) };
+}
+async function loadFile() {
+  if (FILE) return FILE;
+  const r = await fetch(DATA_URL, { cache: "no-store" });
+  if (!r.ok) throw new Error("Couldn't load the data file (" + r.status + ").");
+  return (FILE = await r.json());
+}
+const ss = { get(k){ try { return sessionStorage.getItem(k); } catch { return null; } },
+             set(k,v){ try { sessionStorage.setItem(k,v); } catch {} },
+             del(k){ try { sessionStorage.removeItem(k); } catch {} } };
+const ls = { get(k){ try { return localStorage.getItem(k); } catch { return null; } },
+             set(k,v){ try { localStorage.setItem(k,v); return true; } catch { return false; } },
+             del(k){ try { localStorage.removeItem(k); } catch {} } };
+
+async function unlockWithKey(key) {
+  const f = await loadFile();
+  DB = await decryptWith(key, f.iv, f.ct);
+  KEY = key;
+  const raw = new Uint8Array(await crypto.subtle.exportKey("raw", key));
+  ss.set(SKEY, JSON.stringify({ salt: f.salt, k: b64(raw) }));
+  await loadState();
+  startApp();
+}
+document.getElementById("lockForm").addEventListener("submit", async e => {
+  e.preventDefault();
+  const err = document.getElementById("lockErr"), btn = document.getElementById("unlockBtn");
+  err.textContent = ""; btn.disabled = true; btn.textContent = "Unlocking…";
+  try {
+    const f = await loadFile();
+    const key = await deriveKey(document.getElementById("pw").value, ub64(f.salt), f.iter);
+    await unlockWithKey(key);
+  } catch (ex) {
+    err.textContent = ex && ex.name === "OperationError" ? "Wrong password." : (ex.message || "Couldn't unlock.");
+  } finally { btn.disabled = false; btn.textContent = "Unlock"; }
+});
+(async () => { // resume this tab's session without retyping
+  const c = ss.get(SKEY); if (!c) return;
+  try {
+    const { salt, k } = JSON.parse(c); const f = await loadFile();
+    if (f.salt !== salt) { ss.del(SKEY); return; }
+    const key = await crypto.subtle.importKey("raw", ub64(k), { name: "AES-GCM" }, true, ["encrypt", "decrypt"]);
+    await unlockWithKey(key);
+  } catch { ss.del(SKEY); }
+})();
+document.getElementById("lockBtn").addEventListener("click", () => { ss.del(SKEY); location.reload(); });
+
+// ================================================================ state
+const TYPES = ["Supplement", "Topical", "Patch", "Kit", "Guide", "Device", "Accessory"];
+const DEFAULT_MULT = { Supplement: 2, Topical: 2, Patch: 2, Kit: 2, Guide: 2, Device: 1.5, Accessory: 2 };
+const blankProgram = () => ({ patient: "", title: "", length: "", lines: [], discType: "pct", disc: "", months: "", notes: "", sign: false });
+let S = { settings: { mult: { ...DEFAULT_MULT }, round: "up1", tax: 0, valid: 30, preparedBy: "Dr. Jon Urrutia, DC" },
+          overrides: {}, program: blankProgram(), saved: [] };
+
+async function loadState() {
+  const raw = ls.get(LKEY); if (!raw) return;
+  try {
+    const st = JSON.parse(raw); const v = await decryptWith(KEY, st.iv, st.ct);
+    S = { ...S, ...v, settings: { ...S.settings, ...(v.settings || {}), mult: { ...DEFAULT_MULT, ...((v.settings || {}).mult || {}) } } };
+  } catch { toast("Saved settings on this device couldn't be opened (password changed?). Starting fresh."); }
+}
+let saveT = null;
+function save() { clearTimeout(saveT); saveT = setTimeout(persist, 250); }
+let chain = Promise.resolve();
+function persist() { // serialized so an older snapshot never lands after a newer one
+  clearTimeout(saveT);
+  return (chain = chain.then(async () => {
+    if (!KEY) return;
+    const enc = await encryptWith(KEY, S);
+    if (!ls.set(LKEY, JSON.stringify(enc))) toast("This browser isn't saving data. Programs will be lost on refresh.");
+  }).catch(() => {}));
+}
+
+// ================================================================ pricing
+const byId = id => DB.products.find(p => p.id === id);
+const ov = id => S.overrides[id] || {};
+const costOf = p => (ov(p.id).cost ?? p.cost);
+const multOf = p => (ov(p.id).mult ?? S.settings.mult[p.type] ?? 2);
+function roundP(x) {
+  switch (S.settings.round) {
+    case "none": return Math.round(x * 100) / 100;
+    case "up5": return Math.ceil(x / 5 - 1e-9) * 5;
+    case "95": return Math.ceil(x + 0.05 - 1e-9) - 0.05;
+    default: return Math.ceil(x - 1e-9);
+  }
+}
+function retailOf(p) {
+  const o = ov(p.id); if (o.price != null && o.price !== "") return +o.price;
+  const c = costOf(p); if (c == null) return null;
+  return roundP(c * multOf(p));
+}
+const money = (n, cents) => n == null || isNaN(n) ? "—" :
+  "$" + Number(n).toLocaleString("en-US", { minimumFractionDigits: cents || n % 1 ? 2 : 0, maximumFractionDigits: 2 });
+const m2 = n => n == null || isNaN(n) ? "—" : "$" + Number(n).toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+const pct = n => isFinite(n) ? Math.round(n * 100) + "%" : "—";
+const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+
+function lineInfo(l) {
+  const p = l.pid ? byId(l.pid) : null;
+  const unit = l.price != null && l.price !== "" ? +l.price : (p ? retailOf(p) : 0);
+  const cost = p ? costOf(p) : (l.cost === "" || l.cost == null ? 0 : +l.cost);
+  const qty = Math.max(0, +l.qty || 0);
+  return { p, unit, cost, qty, total: (unit || 0) * qty, costTotal: (cost || 0) * qty };
+}
+function totals() {
+  const pr = S.program; let sub = 0, cost = 0, missing = 0;
+  for (const l of pr.lines) { const i = lineInfo(l); sub += i.total; cost += i.costTotal; if (i.p && costOf(i.p) == null) missing++; }
+  const dv = +pr.disc || 0;
+  const disc = Math.min(sub, pr.discType === "pct" ? sub * dv / 100 : dv);
+  const after = sub - disc;
+  const tax = after * (+S.settings.tax || 0) / 100;
+  const total = Math.round((after + tax) * 100) / 100;
+  const months = Math.max(0, Math.floor(+pr.months || 0));
+  return { sub, disc, tax, total, cost, profit: after - cost, margin: after ? (after - cost) / after : NaN, months, monthly: months > 1 ? total / months : null, missing };
+}
+
+// ================================================================ product list
+const el = id => document.getElementById(id);
+let cat = "", qStr = "";
+function haystack(p) { return [p.name, p.tagline, p.desc, p.cats.join(" "), p.contains.join(" "), p.aka, p.type, (p.benefits || []).join(" ")].join(" ").toLowerCase(); }
+function buildFilters() {
+  const counts = {}; DB.products.forEach(p => p.cats.forEach(c => counts[c] = (counts[c] || 0) + 1));
+  const cats = Object.keys(counts).sort();
+  const verifyN = DB.products.filter(p => p.verify || costOf(p) == null).length;
+  el("chips").innerHTML = `<button class="chip" data-cat="" aria-pressed="true">All<span class="ct">${DB.products.length}</span></button>` +
+    cats.map(c => `<button class="chip" data-cat="${esc(c)}" aria-pressed="false">${esc(c)}<span class="ct">${counts[c]}</span></button>`).join("") +
+    `<button class="chip" data-cat="__verify" aria-pressed="false">Needs a check<span class="ct">${verifyN}</span></button>`;
+  el("typeSel").innerHTML = `<option value="">All types</option>` + TYPES.filter(t => DB.products.some(p => p.type === t)).map(t => `<option>${t}</option>`).join("");
+}
+el("chips").addEventListener("click", e => {
+  const b = e.target.closest(".chip"); if (!b) return;
+  cat = b.dataset.cat; el("chips").querySelectorAll(".chip").forEach(c => c.setAttribute("aria-pressed", c === b));
+  renderList();
+});
+el("q").addEventListener("input", e => { qStr = e.target.value.trim().toLowerCase(); renderList(); });
+el("typeSel").addEventListener("change", renderList);
+el("sortSel").addEventListener("change", renderList);
+
+function renderList() {
+  const type = el("typeSel").value, sort = el("sortSel").value;
+  const terms = qStr.split(/\s+/).filter(Boolean);
+  let list = DB.products.filter(p =>
+    (!cat || (cat === "__verify" ? (p.verify || costOf(p) == null) : p.cats.includes(cat))) &&
+    (!type || p.type === type) &&
+    terms.every(t => haystack(p).includes(t)));
+  const r = p => retailOf(p) ?? -1, c = p => costOf(p) ?? 1e9;
+  list.sort(sort === "cost" ? (a, b) => c(a) - c(b) : sort === "retail" ? (a, b) => r(b) - r(a)
+    : sort === "profit" ? (a, b) => (r(b) - (costOf(b) || 0)) - (r(a) - (costOf(a) || 0)) : (a, b) => a.name.localeCompare(b.name));
+  el("count").textContent = `${list.length} product${list.length === 1 ? "" : "s"}`;
+  el("plist").innerHTML = list.map(p => {
+    const c = costOf(p), rt = retailOf(p), prof = rt != null && c != null ? rt - c : null;
+    const flag = c == null ? `<span class="badge warn">Add cost</span>` : p.verify ? `<span class="badge warn" title="${esc(p.verify)}">Check</span>` : "";
+    return `<div class="prow">
+      <div style="min-width:0">
+        <button class="nm" data-open="${p.id}">${esc(p.name)}</button>
+        <div class="tg">${esc(p.tagline || p.desc)}</div>
+        <div class="meta"><span class="badge type">${p.type}</span>${p.days ? `<span class="badge">${p.days} days</span>` : ""}${ov(p.id).cost != null || ov(p.id).mult != null || ov(p.id).price != null ? `<span class="badge">Custom price</span>` : ""}${flag}</div>
+      </div>
+      <div class="prices num">
+        <div class="cost"><span>Cost</span>${m2(c)}</div>
+        <div><span>Retail</span><b>${m2(rt)}</b></div>
+        <div><span>Profit</span>${prof == null ? "—" : m2(prof)}</div>
+      </div>
+      <button class="add" data-add="${p.id}" aria-label="Add ${esc(p.name)} to program" title="Add to program">+</button>
+    </div>`;
+  }).join("") || `<div class="empty">No products match. Try a different word.</div>`;
+}
+el("plist").addEventListener("click", e => {
+  const a = e.target.closest("[data-add]"); if (a) { addLine(a.dataset.add); return; }
+  const o = e.target.closest("[data-open]"); if (o) openProduct(o.dataset.open);
+});
+
+// ================================================================ program
+function addLine(pid) {
+  const p = byId(pid);
+  const ex = S.program.lines.find(l => l.pid === pid && (l.price == null || l.price === ""));
+  if (ex) ex.qty = (+ex.qty || 0) + 1;
+  else S.program.lines.push({ pid, name: p.name, qty: 1, price: null, how: p.directions || "", purpose: p.tagline || "" });
+  save(); renderProgram(); toast(`Added ${p.name}`);
+}
+el("addCustom").addEventListener("click", () => {
+  S.program.lines.push({ pid: null, name: "", qty: 1, price: "", cost: "", how: "", purpose: "" });
+  save(); renderProgram();
+  const ins = el("lines").querySelectorAll("[data-f='name']"); ins[ins.length - 1]?.focus();
+});
+function renderProgram() {
+  const pr = S.program;
+  el("pPatient").value = pr.patient; el("pTitle").value = pr.title; el("pLength").value = pr.length;
+  el("pDiscType").value = pr.discType; el("pDisc").value = pr.disc; el("pMonths").value = pr.months;
+  el("pNotes").value = pr.notes; el("pSign").checked = !!pr.sign;
+  el("lines").innerHTML = pr.lines.length ? pr.lines.map((l, i) => {
+    const info = lineInfo(l), p = info.p;
+    const marg = info.unit ? (info.unit - (info.cost || 0)) / info.unit : NaN;
+    return `<div class="line" data-i="${i}">
+      <div class="l1">
+        <div class="lname">${p ? esc(p.name) : `<input data-f="name" value="${esc(l.name)}" placeholder="Item name (e.g. Follow-up visits)">`}</div>
+        <button class="x" data-del="${i}" aria-label="Remove">×</button>
+      </div>
+      <div class="l2">
+        <span class="qty"><button data-q="-1" aria-label="Less">−</button><input data-f="qty" inputmode="numeric" value="${esc(l.qty)}"><button data-q="1" aria-label="More">+</button></span>
+        <label class="pricein" title="${p ? "Leave blank to use your markup" : "Price each"}">$<input data-f="price" type="number" step="any" min="0" value="${l.price ?? ""}" placeholder="${p ? (retailOf(p) ?? "") : "0"}"></label>
+        ${!p ? `<label class="pricein" title="Your cost each (staff only)">cost $<input data-f="cost" type="number" step="any" min="0" value="${esc(l.cost)}" placeholder="0"></label>` : ""}
+        <span class="ltot num">${m2(info.total)}</span>
+      </div>
+      <div class="staff num">Cost ${m2(info.cost)} ea · Profit ${m2((info.unit - (info.cost || 0)) * info.qty)} · Margin ${pct(marg)}${p && costOf(p) == null ? ` · <b style="color:var(--bad)">no cost on file</b>` : ""}</div>
+      <details><summary>Patient instructions</summary>
+        <label class="field" style="margin-top:6px">What it supports<input data-f="purpose" value="${esc(l.purpose)}"></label>
+        <label class="field" style="margin-top:6px">How to use<textarea data-f="how">${esc(l.how)}</textarea></label>
+      </details>
+    </div>`;
+  }).join("") : `<div class="empty">Tap <b>+</b> on any product to start a program.</div>`;
+  renderTotals(); renderSaved();
+}
+function renderTotals() {
+  const t = totals(), pr = S.program;
+  el("tot").innerHTML = `
+    <div class="r"><span>Subtotal</span><span class="num">${m2(t.sub)}</span></div>
+    ${t.disc ? `<div class="r"><span>Discount</span><span class="num">−${m2(t.disc)}</span></div>` : ""}
+    ${t.tax ? `<div class="r"><span>Sales tax (${S.settings.tax}%)</span><span class="num">${m2(t.tax)}</span></div>` : ""}
+    <div class="r big"><span>Patient total</span><span class="num">${m2(t.total)}</span></div>
+    ${t.monthly ? `<div class="r"><span>${t.months} monthly payments</span><span class="num">${m2(t.monthly)}/mo</span></div>` : ""}`;
+  el("staffbox").innerHTML = `<div class="tag">Staff only · not on PDF</div>
+    <div class="r"><span>Your cost</span><b class="num">${m2(t.cost)}</b></div>
+    <div class="r"><span>Profit</span><b class="num">${m2(t.profit)}</b></div>
+    <div class="r"><span>Margin</span><b class="num">${pct(t.margin)}</b></div>
+    ${t.missing ? `<div style="color:var(--bad);margin-top:4px">${t.missing} item(s) have no cost on file. Profit is overstated.</div>` : ""}`;
+  const n = pr.lines.reduce((a, l) => a + (+l.qty || 0), 0);
+  el("mbCount").textContent = `${n} item${n === 1 ? "" : "s"}`; el("mbTotal").textContent = m2(t.total);
+  document.body.classList.toggle("has-lines", pr.lines.length > 0);
+  el("minibar").classList.toggle("hidden", pr.lines.length === 0);
+}
+el("lines").addEventListener("input", e => {
+  const box = e.target.closest(".line"); const f = e.target.dataset.f; if (!box || !f) return;
+  const l = S.program.lines[+box.dataset.i];
+  l[f] = f === "qty" ? e.target.value.replace(/[^\d]/g, "") : e.target.value;
+  if (f === "price" && e.target.value === "") l.price = l.pid ? null : "";
+  save();
+  if (f === "qty" || f === "price" || f === "cost") { // update numbers without stealing focus
+    const info = lineInfo(l);
+    box.querySelector(".ltot").textContent = m2(info.total);
+    const marg = info.unit ? (info.unit - (info.cost || 0)) / info.unit : NaN;
+    box.querySelector(".staff").innerHTML = `Cost ${m2(info.cost)} ea · Profit ${m2((info.unit - (info.cost || 0)) * info.qty)} · Margin ${pct(marg)}`;
+    renderTotals();
+  }
+});
+el("lines").addEventListener("click", e => {
+  const d = e.target.closest("[data-del]"); if (d) { S.program.lines.splice(+d.dataset.del, 1); save(); renderProgram(); return; }
+  const q = e.target.closest("[data-q]"); if (q) {
+    const l = S.program.lines[+q.closest(".line").dataset.i];
+    l.qty = Math.max(1, (+l.qty || 0) + +q.dataset.q); save(); renderProgram();
+  }
+});
+[["pPatient", "patient"], ["pTitle", "title"], ["pLength", "length"], ["pDisc", "disc"], ["pMonths", "months"], ["pNotes", "notes"]]
+  .forEach(([id, k]) => el(id).addEventListener("input", e => { S.program[k] = e.target.value; save(); renderTotals(); }));
+el("pDiscType").addEventListener("change", e => { S.program.discType = e.target.value; save(); renderTotals(); });
+el("pSign").addEventListener("change", e => { S.program.sign = e.target.checked; save(); });
+el("minibar").addEventListener("click", () => el("prog").scrollIntoView({ behavior: "smooth" }));
+
+el("newBtn").addEventListener("click", () => {
+  if (S.program.lines.length && !confirmInline("newBtn", "Clear it?")) return;
+  S.program = blankProgram(); save(); renderProgram();
+});
+el("saveBtn").addEventListener("click", () => {
+  const pr = S.program; if (!pr.lines.length) { toast("Add a product first."); return; }
+  const name = [pr.patient, pr.title].filter(Boolean).join(" · ") || "Untitled program";
+  const ex = S.saved.find(s => s.id === pr.savedId);
+  const copy = JSON.parse(JSON.stringify(pr));
+  if (ex) { ex.program = copy; ex.name = name; ex.at = Date.now(); }
+  else { pr.savedId = "s" + Date.now(); copy.savedId = pr.savedId; S.saved.unshift({ id: pr.savedId, name, at: Date.now(), program: copy }); }
+  persist(); renderSaved(); toast("Saved on this device.");
+});
+function renderSaved() {
+  if (!S.saved.length) { el("saved").innerHTML = ""; return; }
+  el("saved").innerHTML = `<h3>Saved programs</h3>` + S.saved.map(s => {
+    const t = s.program.lines.length;
+    return `<div class="s"><div class="n">${esc(s.name)}<small>${t} item${t === 1 ? "" : "s"} · ${new Date(s.at).toLocaleDateString()}</small></div>
+      <button class="btn ghost small" data-load="${s.id}">Open</button>
+      <button class="btn ghost small" data-dup="${s.id}" title="Use as a template">Copy</button>
+      <button class="x" data-rm="${s.id}" aria-label="Delete">×</button></div>`;
+  }).join("") + `<p class="help">Saved in this browser only, encrypted with your password.</p>`;
+}
+el("saved").addEventListener("click", e => {
+  const b = e.target.closest("button"); if (!b) return;
+  const s = S.saved.find(x => x.id === (b.dataset.load || b.dataset.dup || b.dataset.rm)); if (!s) return;
+  if (b.dataset.load) { S.program = JSON.parse(JSON.stringify(s.program)); toast("Opened."); }
+  if (b.dataset.dup) { S.program = JSON.parse(JSON.stringify(s.program)); S.program.patient = ""; delete S.program.savedId; toast("Copied as a new program. Add the patient's name."); }
+  if (b.dataset.rm) { if (!confirmInline(b, "Delete?")) return; S.saved = S.saved.filter(x => x !== s); }
+  save(); renderProgram();
+});
+// two-tap confirm without browser dialogs
+const pending = new WeakMap();
+function confirmInline(btnOrId, label) {
+  const b = typeof btnOrId === "string" ? el(btnOrId) : btnOrId;
+  if (pending.get(b)) { pending.delete(b); b.textContent = b.dataset.orig; return true; }
+  b.dataset.orig = b.textContent; b.textContent = label; pending.set(b, true);
+  setTimeout(() => { if (pending.get(b)) { pending.delete(b); b.textContent = b.dataset.orig; } }, 3000);
+  return false;
+}
+
+// ================================================================ patient PDF
+el("printBtn").addEventListener("click", () => {
+  const pr = S.program;
+  if (!pr.lines.length) { toast("Add a product first."); return; }
+  const noPrice = pr.lines.filter(l => !(lineInfo(l).unit > 0));
+  if (noPrice.length) { toast(`Set a price for: ${noPrice.map(l => l.name || "custom item").join(", ")}`); return; }
+  const t = totals(), today = new Date();
+  const valid = new Date(today.getTime() + (+S.settings.valid || 30) * 864e5);
+  const fmtD = d => d.toLocaleDateString("en-US", { month: "long", day: "numeric", year: "numeric" });
+  const rows = pr.lines.map((l, i) => {
+    const info = lineInfo(l), p = info.p;
+    const inc = p && p.contains.length ? `<div class="inc">Includes: ${esc(p.contains.join(", "))}</div>` : "";
+    return `<tr><td class="n">${i + 1}</td>
+      <td><div class="pn">${esc(p ? p.name : l.name)}</div>${l.purpose ? `<div class="pt">${esc(l.purpose)}</div>` : ""}${inc}</td>
+      <td class="how">${esc(l.how)}</td>
+      <td class="q">${info.qty}</td>
+      <td class="p num">${m2(info.total)}${info.qty > 1 ? `<div class="pt">${m2(info.unit)} each</div>` : ""}</td></tr>`;
+  }).join("");
+  el("doc").innerHTML = `
+    <div class="dhead"><img src="../assets/logo-olive.png" alt="Colleyville Chiropractic">
+      <div class="who"><b>Colleyville Chiropractic | CVC Spine</b>1001 Glade Rd, Suite 120, Colleyville, TX 76034<br>(817) 420-7696 · colleyvillechiropractic.com</div></div>
+    <h1>${esc(pr.title || "Your Care Protocol")}</h1>
+    <div class="facts">
+      ${pr.patient ? `<span>Prepared for <b>${esc(pr.patient)}</b></span>` : ""}
+      <span>Date <b>${fmtD(today)}</b></span>
+      ${pr.length ? `<span>Program length <b>${esc(pr.length)}</b></span>` : ""}
+      ${S.settings.preparedBy ? `<span>Prepared by <b>${esc(S.settings.preparedBy)}</b></span>` : ""}
+    </div>
+    <table><thead><tr><th></th><th>Product</th><th>How to use</th><th class="q">Qty</th><th class="p">Price</th></tr></thead><tbody>${rows}</tbody></table>
+    <div class="totals num">
+      <div class="r"><span>Subtotal</span><span>${m2(t.sub)}</span></div>
+      ${t.disc ? `<div class="r"><span>Program savings</span><span>−${m2(t.disc)}</span></div>` : ""}
+      ${t.tax ? `<div class="r"><span>Sales tax</span><span>${m2(t.tax)}</span></div>` : ""}
+      <div class="r big"><span>Total</span><span>${m2(t.total)}</span></div>
+      ${t.monthly ? `<div class="r mo"><span>or ${t.months} monthly payments of</span><span>${m2(t.monthly)}</span></div>` : ""}
+    </div>
+    ${pr.notes ? `<div class="notes"><b>Notes from your doctor</b>${esc(pr.notes)}</div>` : ""}
+    ${pr.sign ? `<div class="sign"><div>Patient signature</div><div>Date</div></div>` : ""}
+    <div class="foot">Pricing valid through ${fmtD(valid)}. Questions? Call or text (817) 420-7696.<br>
+      *These statements have not been evaluated by the Food and Drug Administration. These products are not intended to diagnose, treat, cure, or prevent any disease. Talk with your doctor before starting any supplement, especially if you are pregnant or nursing, take prescription medication, or have a medical condition.</div>`;
+  const oldTitle = document.title;
+  document.title = ["CVC Protocol", pr.patient, today.toISOString().slice(0, 10)].filter(Boolean).join(" - ");
+  const img = el("doc").querySelector("img");
+  const go = () => { window.print(); setTimeout(() => { document.title = oldTitle; }, 500); };
+  img.complete ? go() : (img.onload = img.onerror = go);
+});
+
+// ================================================================ drawers
+function openDrawer(html) { el("drawer").innerHTML = html; el("drawer").classList.remove("hidden"); el("scrim").classList.remove("hidden"); el("drawer").scrollTop = 0; el("drawer").querySelector("[data-close]")?.focus(); }
+function closeDrawer() { el("drawer").classList.add("hidden"); el("scrim").classList.add("hidden"); }
+el("scrim").addEventListener("click", closeDrawer);
+document.addEventListener("keydown", e => { if (e.key === "Escape") closeDrawer(); });
+el("drawer").addEventListener("click", e => { if (e.target.closest("[data-close]")) closeDrawer(); });
+
+function openProduct(id) {
+  const p = byId(id), o = ov(id);
+  const list = (arr) => arr.length ? `<ul>${arr.map(x => `<li>${esc(x)}</li>`).join("")}</ul>` : "";
+  openDrawer(`
+    <div class="dh"><h2>${esc(p.name)}</h2><button class="x" data-close aria-label="Close" style="font-size:26px">×</button></div>
+    <div class="sub">${esc(p.tagline)}${p.days ? ` · ${p.days}-day program` : ""}</div>
+    <div class="meta" style="display:flex;gap:6px;flex-wrap:wrap"><span class="badge type">${p.type}</span>${p.cats.map(c => `<span class="badge">${esc(c)}</span>`).join("")}</div>
+    ${p.verify ? `<div class="note"><b>Check:</b> ${esc(p.verify)}</div>` : ""}
+    <div class="pricecard num" id="dPrice"></div>
+    <div class="grid2" style="margin-top:10px">
+      <label class="field">Your cost ($)<input id="dCost" type="number" step="any" min="0" value="${o.cost ?? ""}" placeholder="${p.cost ?? "not on file"}"></label>
+      <label class="field">Markup (×)<input id="dMult" type="number" step="0.05" min="0" value="${o.mult ?? ""}" placeholder="${S.settings.mult[p.type]} (${p.type} default)"></label>
+      <label class="field full">Or set a fixed retail price ($)<input id="dFixed" type="number" step="any" min="0" value="${o.price ?? ""}" placeholder="Leave blank to use markup"></label>
+    </div>
+    <p class="help">Blank fields use the store cost and your ${esc(p.type)} markup. Changes save on this device.</p>
+    <div class="actions"><button class="btn" data-add2="${p.id}">Add to program</button><button class="btn ghost" id="dReset">Reset pricing</button></div>
+    ${p.desc ? `<h4>About</h4><p>${esc(p.desc)}</p>` : ""}
+    ${p.contains.length ? `<h4>Includes</h4>${list(p.contains)}` : ""}
+    ${p.directions ? `<h4>Directions</h4><p>${esc(p.directions)}</p>` : ""}
+    ${p.size || p.servings ? `<h4>Size</h4><p>${esc(p.size)}${p.servings ? ` · ${esc(p.servings)} servings` : ""}</p>` : ""}
+    ${(p.benefits || []).length ? `<h4>Key benefits (from BPA)</h4>${list(p.benefits)}` : ""}
+    <p class="help" style="margin-top:18px">${p.page ? `2026 BPA Catalog, page ${p.page}. ` : ""}${esc(DB.fulfillment || "")}</p>`);
+  const upd = () => {
+    const c = costOf(p), r = retailOf(p);
+    el("dPrice").innerHTML = `<div><div class="k">Cost</div><div class="v">${m2(c)}</div></div><div><div class="k">Retail</div><div class="v">${m2(r)}</div></div><div><div class="k">Profit · margin</div><div class="v">${r != null && c != null ? m2(r - c) : "—"}</div><div class="k" style="text-transform:none">${r && c != null ? pct((r - c) / r) : ""}</div></div>`;
+  };
+  upd();
+  const bind = (inp, k) => el(inp).addEventListener("input", e => {
+    const v = e.target.value; const o2 = { ...ov(id) };
+    if (v === "") delete o2[k]; else o2[k] = +v;
+    if (Object.keys(o2).length) S.overrides[id] = o2; else delete S.overrides[id];
+    save(); upd(); renderList(); renderProgram();
+  });
+  bind("dCost", "cost"); bind("dMult", "mult"); bind("dFixed", "price");
+  el("dReset").addEventListener("click", () => { delete S.overrides[id]; save(); renderList(); renderProgram(); openProduct(id); });
+  el("drawer").querySelector("[data-add2]").addEventListener("click", () => { addLine(id); closeDrawer(); });
+}
+
+el("openSettings").addEventListener("click", openSettings);
+function openSettings() {
+  const st = S.settings;
+  const nOver = Object.keys(S.overrides).length;
+  openDrawer(`
+    <div class="dh"><h2>Pricing &amp; settings</h2><button class="x" data-close aria-label="Close" style="font-size:26px">×</button></div>
+    <h4>Markup by product type (× cost)</h4>
+    <div class="settings-grid">${TYPES.map(t => `<label class="field">${t}<input type="number" step="0.05" min="0" data-mult="${t}" value="${st.mult[t]}"></label>`).join("")}</div>
+    <p class="help">2 = double your cost (50% margin). 1.5 = 33% margin. Any product can override this in its own panel.</p>
+    <div class="grid2" style="margin-top:12px">
+      <label class="field">Round retail prices
+        <select id="sRound">
+          <option value="none">Exact (cents)</option><option value="up1">Up to whole dollar</option>
+          <option value="95">End in .95</option><option value="up5">Up to nearest $5</option>
+        </select></label>
+      <label class="field">Sales tax % (0 = none)<input id="sTax" type="number" step="0.01" min="0" value="${st.tax}"></label>
+      <label class="field">Quote valid (days)<input id="sValid" type="number" step="1" min="1" value="${st.valid}"></label>
+      <label class="field">"Prepared by" on PDF<input id="sBy" value="${esc(st.preparedBy)}"></label>
+    </div>
+    <h4>Custom prices</h4>
+    <p class="help">${nOver} product${nOver === 1 ? " has" : "s have"} a custom cost, markup or price on this device.</p>
+    <h4>Update the data file (costs + password)</h4>
+    <p class="help">Your custom costs and prices live in this browser only. To make them permanent for every device, or to change the password, download a new data file and replace <code>staff/data.enc.json</code> on GitHub with it.</p>
+    <div class="grid2">
+      <label class="field">New password (optional)<input id="sPw" type="password" autocomplete="new-password" placeholder="Leave blank to keep current"></label>
+      <label class="field">Confirm new password<input id="sPw2" type="password" autocomplete="new-password"></label>
+    </div>
+    <p class="help">Changing the password? Upload the new file right away. This device switches to the new password immediately, so saved programs here won't open with the old one.</p>
+    <label class="chk" style="margin-top:8px"><input type="checkbox" id="sBake" checked> Write my custom costs into the file</label>
+    <div class="actions"><button class="btn" id="sExport">Download data.enc.json</button></div>
+    <div class="lock-err" id="sErr"></div>
+    <h4>This device</h4>
+    <div class="actions"><button class="btn danger" id="sWipe">Erase saved programs &amp; prices on this device</button></div>`);
+  el("sRound").value = st.round;
+  el("drawer").querySelectorAll("[data-mult]").forEach(i => i.addEventListener("input", e => {
+    const v = parseFloat(e.target.value); if (!(v > 0)) return;
+    S.settings.mult[e.target.dataset.mult] = v; save(); renderList(); renderProgram();
+  }));
+  el("sRound").addEventListener("change", e => { S.settings.round = e.target.value; save(); renderList(); renderProgram(); });
+  el("sTax").addEventListener("input", e => { S.settings.tax = Math.max(0, +e.target.value || 0); save(); renderTotals(); });
+  el("sValid").addEventListener("input", e => { S.settings.valid = Math.max(1, +e.target.value || 30); save(); });
+  el("sBy").addEventListener("input", e => { S.settings.preparedBy = e.target.value; save(); });
+  el("sWipe").addEventListener("click", e => {
+    if (!confirmInline(e.target, "Tap again to erase")) return;
+    ls.del(LKEY); S.overrides = {}; S.saved = []; S.program = blankProgram(); renderList(); renderProgram(); closeDrawer(); toast("Erased.");
+  });
+  el("sExport").addEventListener("click", exportData);
+}
+async function exportData() {
+  const pw = el("sPw").value, pw2 = el("sPw2").value, err = el("sErr");
+  err.textContent = "";
+  if (pw && pw !== pw2) { err.textContent = "Passwords don't match."; return; }
+  if (pw && pw.length < 10) { err.textContent = "Use at least 10 characters."; return; }
+  const db = JSON.parse(JSON.stringify(DB));
+  if (el("sBake").checked) {
+    db.products.forEach(p => { const o = S.overrides[p.id]; if (o && o.cost != null) { p.cost = o.cost; if (p.verify && /Add cost/.test(p.verify)) p.verify = ""; } });
+    db.updated = new Date().toISOString().slice(0, 10);
+  }
+  let key = KEY, salt = FILE.salt, iter = FILE.iter;
+  if (pw) { const s = crypto.getRandomValues(new Uint8Array(16)); iter = 310000; salt = b64(s); key = await deriveKey(pw, s, iter); }
+  const enc = await encryptWith(key, db);
+  const out = { v: 1, kdf: "PBKDF2-SHA256", iter, salt, iv: enc.iv, ct: enc.ct };
+  const a = document.createElement("a");
+  a.href = URL.createObjectURL(new Blob([JSON.stringify(out)], { type: "application/json" }));
+  a.download = "data.enc.json"; document.body.appendChild(a); a.click(); a.remove();
+  if (pw) { // re-key this device so saved programs keep working with the new password
+    KEY = key; FILE = out; DB = db;
+    const raw = new Uint8Array(await crypto.subtle.exportKey("raw", key));
+    ss.set(SKEY, JSON.stringify({ salt, k: b64(raw) })); await persist();
+  }
+  toast("Downloaded. Upload it to the staff folder on GitHub to make it live.");
+}
+
+let toastT;
+function toast(msg) {
+  document.querySelector(".toast")?.remove(); clearTimeout(toastT);
+  const t = document.createElement("div"); t.className = "toast"; t.textContent = msg; document.body.appendChild(t);
+  toastT = setTimeout(() => t.remove(), 2600);
+}
+
+function startApp() {
+  el("lock").classList.add("hidden"); el("app").classList.remove("hidden");
+  el("pw").value = "";
+  buildFilters(); renderList(); renderProgram();
+}
+})();
+</script>
+</body>
+</html>
