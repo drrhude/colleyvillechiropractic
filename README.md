@@ -66,10 +66,10 @@ containing `www.colleyvillechiropractic.com` only on launch day.
 - In GA4, mark `book_click`, `call_click` and `generate_lead` as key events.
 - Actual appointment completions happen inside Jane, so they can't be tracked from this site. Use Jane's reports for booked appointments.
 
-## Staff Product Desk (/staff/)
-Password-locked BPA product lookup + program builder with a patient PDF (no costs on it).
+## Staff Program Desk (/staff/)
+Password-locked program builder: Chiro/PT, NeuroPath, Shockwave or products, priced cash, member or BCBS (estimate from allowables), with BPA product costs + markup and a patient PDF (no costs on it).
 Not linked from the site, `noindex`, and not in the sitemap.
-- `staff/data.enc.json` is the product database, AES-256-GCM encrypted (PBKDF2-SHA256, 310k rounds).
+- `staff/data.enc.json` is the product, service and BCBS fee database, AES-256-GCM encrypted (PBKDF2-SHA256, 310k rounds).
   The repo is public, so **never commit the plaintext products file**. Without the password the file is unreadable.
 - Markup, custom costs and saved programs are stored per browser, encrypted with the same password.
 - To update costs or change the password: open /staff/ > Settings > "Download data.enc.json", then replace
