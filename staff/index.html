@@ -636,6 +636,7 @@ function startProgram(type, opt) {
   } else if (type === "neuro") {
     pr.payer = "cash"; pr.mult = String(S.settings.neuroMult || 3); pr.pif = true; pr.months = "6";
     addLine("product", "neuropath-equipment", 1, true);
+    addLine("product", "theraray", 1, true); // light device; swap for Freedom 300 Pro (Anodyne) if preferred
     addLine("product", opt === "gut" ? "neuropathy-gut-health-combined-niche" : "neuropathy-premium-kit", 1, true);
     addLine("service", "neuro-visit", 12, true);
     pr.length = "12 months (12 visits)";
